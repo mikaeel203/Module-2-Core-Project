@@ -1,42 +1,62 @@
+import db from '../db.js'
+
+const getLeaveRequestsModel = async() =>{
+    let [data] = await db.query("SELECT * FROM moderntech_db.leave_requests;")
+    return data
+}
+
+const patchLeaveReqToUpdateModel = async() =>{
+    let [data] = await db.query("") //emprty as an update query goes here
+    return data
+}
+
+const getEmployeeLeaveHistoryModel = async() =>{
+    let [data] = await db.query("SELECT * FROM moderntech_db.leave_requests WHERE status != 'Pending'") 
+    return data
+}
+
+export {getLeaveRequestsModel, patchLeaveReqToUpdateModel, getEmployeeLeaveHistoryModel}
 
 
-const express = require("express");
-const db = require("../db");
-const router = express.Router()
+
+
+// const express = require("express");
+// const db = require("../db");
+// const router = express.Router()
 
 
 
-router.get("/", async (req, res) => {
-    try {
-        const [results] = await db.promise().query("SELECT * FROM LeaveRequests");
-        res.json(results);
-    } catch (err) {
-        res.status(500).send(err);
-    }
-});
+// router.get("/", async (req, res) => {
+//     try {
+//         const [results] = await db.promise().query("SELECT * FROM LeaveRequests");
+//         res.json(results);
+//     } catch (err) {
+//         res.status(500).send(err);
+//     }
+// });
 
 
 
-router.post("/", async (req, res) => {
-    try {
-        const { leaveId, employeeId, date, reason, status } = req.body;
-        const [results] = await db.promise().query(
-            "INSERT INTO LeaveRequests (leaveId, employeeId, date, reason, status) VALUES (?, ?, ?, ?, ?)",
-            [leaveId, employeeId, date, reason, statuss]
-        );
-        res.json({ message: "Leave Request Submitted!", id: results.insertId });
-    } catch (err) {
-        res.status(500).send(err);
-    }
-});
+// router.post("/", async (req, res) => {
+//     try {
+//         const { leaveId, employeeId, date, reason, status } = req.body;
+//         const [results] = await db.promise().query(
+//             "INSERT INTO LeaveRequests (leaveId, employeeId, date, reason, status) VALUES (?, ?, ?, ?, ?)",
+//             [leaveId, employeeId, date, reason, statuss]
+//         );
+//         res.json({ message: "Leave Request Submitted!", id: results.insertId });
+//     } catch (err) {
+//         res.status(500).send(err);
+//     }
+// });
 
-module.exports = router;
-
-
-// Use delete (remove)
+// module.exports = router;
 
 
-//Use patch (change specific part)
+// // Use delete (remove)
 
 
-// use put (update)
+// //Use patch (change specific part)
+
+
+// // use put (update)
