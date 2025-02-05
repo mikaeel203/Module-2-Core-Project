@@ -1,14 +1,14 @@
-import {db} from "../db.js"
+import {pool} from "../db.js"
 
 //to get all the record data from the db to show when an employee is working
 const getEmployeeAttendanceForCalenderMfunc = async () =>{
-    let [data] = await db.query('')  
+    let [data] = await pool.query('')  
 }
 // this is going to need more going into as dates worked has no data for this --- query will be empty for now
 
 // to get all the eemployees to show their attendance history
 const getEmployeeAttendanceForRecordMfunc = async () =>{
-    let [data] = await db.query('SELECT * FROM moderntech_db.attendance;')
+    let [data] = await pool.query('SELECT * FROM moderntech_db.attendance;')
 }
 
 export {getEmployeeAttendanceForCalenderMfunc, getEmployeeAttendanceForRecordMfunc}

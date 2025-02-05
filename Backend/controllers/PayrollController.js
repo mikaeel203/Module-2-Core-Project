@@ -70,9 +70,5 @@ const addPayrollEntry = (employeeId, hoursWorked, leaveDeductions, finalSalary) 
   });
 };
 
-export {
-  getPayrollInfo,
-  getEmployeePayroll,
-  addPayrollEntry,
-};
-``
+export {getPayrollInfo, getEmployeePayroll, addPayrollEntry};
+

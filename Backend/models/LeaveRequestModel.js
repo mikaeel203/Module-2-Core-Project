@@ -1,4 +1,4 @@
-import db from '../db.js'
+import {pool} from '../db.js'
 
 const getLeaveRequestsModel = async() =>{
     let [data] = await db.query("SELECT * FROM moderntech_db.leave_requests;")
