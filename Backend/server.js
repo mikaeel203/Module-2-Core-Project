@@ -2,10 +2,10 @@ import express from 'express'
 import cors from 'cors'
 // import bodyParser from "from r"
 
-import employeeRoutes from "./routes/employees";
-import payrollRoutes from "./routes/payroll";
-import attendanceRoutes from "./routes/attendance";
-import leaveRoutes from "./routes/leaveRequests";
+import employeeRoutes from "./routes/EmployeeRouter.js";
+import payrollRoutes from "./routes/PayrollRouter.js";
+import attendanceRoutes from "./routes/AttendanceRouter.js";
+import leaveRoutes from "./routes/leaveRequestsRouter.js";
 
 const app = express();
 app.use(cors());
