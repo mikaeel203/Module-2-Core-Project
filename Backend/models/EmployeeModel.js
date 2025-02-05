@@ -1,48 +1,48 @@
+import { pool } from '../db.js';
 
-
-const express = require("express");
-const db = require("../db");
-const router = express.Router();
-
-
-router.get("/", async (req, res) => {
+const getEmployees = async () => {
     try {
-        db.query("SELECT * FROM Employees", (err, results) => {
-            if (err) return res.status(500).json({ error: err.message });
-            res.json(results);
-        });
+        let [data] = await pool.query('SELECT * FROM Employees');
+        return data;
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error fetching employees:', error);
+        throw error;
     }
-});
+};
 
-
-
-
-router.post("/", async (req, res) => {
+const addNewEmployee = async (employee_id, name, department_id, position_id, email) => {
     try {
-        const { employee_id, name, department_id, position_id, email } = req.body;
-        
-        db.query(
-            "INSERT INTO Employees (employee_id, name, department_id, position_id, email) VALUES (?, ?, ?, ?, ?)", 
-            [employee_id, name, department_id, position_id, email], 
-            (err, results) => {
-                if (err) return res.status(500).json({ error: err.message });
-                res.json({ message: "Employee added successfully!", id: results.insertId });
-            }
+        await pool.query(
+            'INSERT INTO Employees (`employee_id`, `name`, `department_id`, `position_id`, `email`) VALUES (?, ?, ?, ?, ?)',
+            [employee_id, name, department_id, position_id, email]
+        );
+        return await getEmployees();
+    } catch (error) {
+        console.error('Error adding new employee:', error);
+        throw error;
+    }
+};
+
+const deleteEmployee = async (employee_id) => {
+    try {
+        let [data] = await pool.query('DELETE FROM Employees WHERE employee_id = ?', [employee_id]);
+        return data;
+    } catch (error) {
+        console.error('Error deleting employee:', error);
+        throw error;
+    }
+};
+
+const updateEmployee = async (employee_id, name, department_id, position_id, email) => {
+    try {
+        await pool.query(
+            'UPDATE `moderntech_db`.`employees` SET `name` = ?, `department_id` = ?, `position_id` = ?, `email` = ? WHERE `employee_id` = ?',
+            [name, department_id, position_id, email, employee_id]
         );
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error updating employee:', error);
+        throw error;
     }
-});
+};
 
-module.exports = router;
-
-
-// Use delete (remove)
-
-
-//Use patch (change specific part)
-
-
-// use put (update)
+export { getEmployees, addNewEmployee, deleteEmployee, updateEmployee };
