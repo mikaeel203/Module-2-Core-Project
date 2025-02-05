@@ -1,5 +1,5 @@
 import express from "express";
-import { getLeaveSummary } from "../controllers/dashboardController.js";
+import { getLeaveSummary } from "../controllers/HomeController.js ";
 
 const router = express.Router();
 

@@ -1,4 +1,4 @@
-import { Dashboard } from "../models/Dashboard.js";
+import { Dashboard } from "../models/HomeModel.js";
 
 export const getLeaveSummary = (req, res) => {
   Dashboard.getLeaveSummary((err, results) => {
