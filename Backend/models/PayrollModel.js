@@ -1,49 +1,89 @@
 
 
-const express = require("express");
-const db = require("../db"); 
-const router = express.Router();
+const mysql = require("mysql");
 
-// Get all payroll records
+// DATABASE SETUP
 
-router.get("/", async (req, res) => {
-    try {
-        const [results] = await db.promise().query("SELECT * FROM Payroll");
-        res.json(results);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+const db = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "*Veve1234", 
+  database: "moderntech_db", 
 });
 
-// Add new payroll record
-
-router.post("/", async (req, res) => {
-    try {
-        const { payrollId, employeeId, hoursWorked, leaveDeductions, finalSalary } = req.body;
-        
-        const [results] = await db.promise().query(
-            "INSERT INTO Payroll (payrollId, employeeId, hoursWorked, leaveDeductions, finalSalary) VALUES (?, ?, ?, ?, ?)",
-            [payrollId, employeeId, hoursWorked, leaveDeductions, finalSalary]
-        );
-        
-        res.json({ message: "Payroll Record Added successfully!", id: results.insertId });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+db.connect((err) => {
+  if (err) throw err;
+  console.log("CONNECTED SUCCESFULLLY TO DB");
 });
 
-module.exports = router;
+
+
+// GETTING PAYROLL INFORMATION FOR ALL EMPLOYEES
+
+const getPayrollInfo = () => {
+  return new Promise((resolve, reject) => {
+    const query = `
+      SELECT 
+        e.employee_id, e.name, p.position_name, e.email,
+        pr.hours_worked, pr.leave_deductions, pr.final_salary
+      FROM Employees e
+      JOIN Position p ON e.position_id = p.position_id
+      JOIN Payroll pr ON e.employee_id = pr.employee_id
+    `;
+    db.query(query, (err, results) => {
+      if (err) reject(err);
+      resolve(results);
+    });
+  });
+};
 
 
 
+// GETTING PAYROL INFORMATION FOR A SPECIFIC EMPLOYEE 
 
 
 
-// Use delete (remove)
+const getEmployeePayroll = (employeeId) => {
+  return new Promise((resolve, reject) => {
+    const query = `
+      SELECT 
+        e.employee_id, e.name, p.position_name, e.email,
+        pr.hours_worked, pr.leave_deductions, pr.final_salary
+      FROM Employees e
+      JOIN Position p ON e.position_id = p.position_id
+      JOIN Payroll pr ON e.employee_id = pr.employee_id
+      WHERE e.employee_id = ?
+    `;
+    db.query(query, [employeeId], (err, results) => {
+      if (err) reject(err);
+      resolve(results);
+    });
+  });
+};
 
 
-//Use patch (change specific part)
+
+//INSERTING NEW PAYROLL RECORD IN THE DB FOR SPECIFIC EMPLOYEE 
+
+const addPayrollEntry = (employeeId, hoursWorked, leaveDeductions, finalSalary) => {
+  return new Promise((resolve, reject) => {
+    const query = `
+      INSERT INTO Payroll (employee_id, hours_worked, leave_deductions, final_salary)
+      VALUES (?, ?, ?, ?)
+    `;
+    db.query(query, [employeeId, hoursWorked, leaveDeductions, finalSalary], (err, results) => {
+      if (err) reject(err);
+      resolve(results);
+    });
+  });
+};
 
 
-// use put (update)
+
+module.exports = {
+  getPayrollInfo,
+  getEmployeePayroll,
+  addPayrollEntry,
+};
+
 
