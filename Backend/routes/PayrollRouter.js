@@ -1,8 +1,8 @@
-//PAYROLL ROUTER
+//PayrollRouter
 
 import express from "express";
 
-import { getPayrollInfo, getEmployeePayroll, addPayrollEntry} from "../controllers/payrollController.js";
+import { getPayrollInfo, getEmployeePayroll, addPayrollEntry} from "../controllers/PayrollController.js";
 
 const router = express.Router();
 
