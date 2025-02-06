@@ -1,11 +1,11 @@
 //PayrollModel
 
-import {pool} from '../db.js'
+// import {pool} from '../db.js'
 
 
 
   // GETTING INFORMATION FOR ALL EMPLOYEES
-  getAllPayrollInfo = async (req, res) => {
+  getAllPayrollInfoModel = async (req, res) => {
     try {
       const payrollData = await {pool}.getPayrollInfo();
       res.json(payrollData); 
@@ -52,4 +52,4 @@ import {pool} from '../db.js'
 
 
   
-  export {getAllPayrollInfo, getEmployeePayroll, addPayrollEntry}
+  export {getAllPayrollInfoModel, getEmployeePayroll, addPayrollEntry}

@@ -10,8 +10,8 @@ import leaveRequestsRoutes from "./routes/leaveRequestsRouter.js";
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.json()) NOT SURE IF ANYONE WAS USING THIS BUT WAS CAUSING ERRORS
+// app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/employees", employeeRoutes);
 // app.use("/payroll", payrollRoutes);
