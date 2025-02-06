@@ -1,15 +1,15 @@
-import express from 'express'
-const router = express.Router()
+import express from "express";
+const router = express.Router();
 
-import { getEmployeeAttendanceForCalender, getEmployeeAttendanceForRecord } from '../controllers/AttendanceController.js'
+import { getEmployeeAttendanceForCalender, getEmployeeAttendanceForRecord } from "../controllers/AttendanceController.js";
 
-//importing function from the controler
+// Importing functions from the controller
 
-//retrieve information of employee and place them in the various fields in the Time Off & Attendance
-router.get ('/', getEmployeeAttendanceForCalender)
-// router.get ('/:employeeData', getSelectionEmployeeAttence) not sure how this will work just yet since a query can be made to select a single row in GET
+// Retrieve employee attendance data for the calendar view
+router.get("/calendar", getEmployeeAttendanceForCalender);
 
-router.get ('/', getEmployeeAttendanceForRecord)
+// Retrieve attendance records
+router.get("/records", getEmployeeAttendanceForRecord);
 
-export default router
+export default router;
 

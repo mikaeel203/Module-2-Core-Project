@@ -1,7 +1,8 @@
 import express from 'express'
-import {getEmployeesCon, addNewEmployeeCon, deleteEmployeeCon, updateEmployeeCon } from '../controllers/EmployeeController.js'
 
 const router = express.Router()
+
+import {getEmployeesCon, addNewEmployeeCon, deleteEmployeeCon, updateEmployeeCon } from '../controllers/EmployeeController.js'
 
 // Get all employee information
 router.get('/',getEmployeesCon)
