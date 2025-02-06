@@ -1,16 +1,16 @@
-// Installed  npm i mysql2 bcrypt
-// installed npm i bcrypt
-// npm install dotenv
-// npm install express bcryptjs mysql2
+// // Installed  npm i mysql2 bcrypt
+// // installed npm i bcrypt
+// // npm install dotenv
+// // npm install express bcryptjs mysql2
 
-// Dont forget in server.js file, to load variables import dotenv from 'dotenv';   dotenv.config();
+// // Dont forget in server.js file, to load variables import dotenv from 'dotenv';   dotenv.config();
 
 
-import dotenv from 'dotenv';
-dotenv.config();
+// import dotenv from 'dotenv';
+// dotenv.config();
 
-import bcrypt from 'bcryptjs';
-import express from 'express';
+// import bcrypt from 'bcryptjs';
+// import express from 'express';
 
 
 
@@ -18,75 +18,75 @@ import express from 'express';
 
  
 
-// CREDENTIALS 
+// // CREDENTIALS 
 
-const username = process.env.DEFAULT_USERNAME; 
-const password = process.env.DEFAULT_PASSWORD;  
+// const username = process.env.USERNAME; 
+// const password = process.env.PASSWORD;  
 
  
 
 
-async function hashPassword() {
-  const hash = await bcrypt.hash(password, 10);
-  return hash; 
-}
+// async function hashPassword() {
+//   const hash = await bcrypt.hash(password, 10);
+//   return hash; 
+// }
 
 
-hashPassword().then((hash) => {
+// hashPassword().then((hash) => {
 
-});
-
-
-
+// });
 
 
 
-// CREATING EXPRESS APP
 
 
-const app = express();
-app.use(express.json());
+
+// // CREATING EXPRESS APP
 
 
-// LOGIN ROUTE
+// const app = express();
+// app.use(express.json());
 
-app.post('/login', async (req, res) => {
-  try {
-    const { username, password } = req.body;
 
-    if (!username || !password) {
-      return res.status(400).json({ message: 'Username and password are required' });
-    }
+// // LOGIN ROUTE
 
-    // Query the database to find the user by username
+// app.post('/login', async (req, res) => {
+//   try {
+//     const { username, password } = req.body;
 
-    const [rows] = await pool.execute('SELECT * FROM users WHERE username = ?', [username]);
+//     if (!username || !password) {
+//       return res.status(400).json({ message: 'Username and password are required' });
+//     }
 
-    if (rows.length === 0) {
-      return res.status(400).json({ message: 'Invalid credentials' });
-    }
+//     // Query the database to find the user by username
 
-    const user = rows[0];
+//     const [rows] = await pool.execute('SELECT * FROM users WHERE username = ?', [username]);
 
-    // Compare the provided password with the hashed password stored in the database
+//     if (rows.length === 0) {
+//       return res.status(400).json({ message: 'Invalid credentials' });
+//     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+//     const user = rows[0];
 
-    if (!isMatch) {
-      return res.status(400).json({ message: 'Invalid credentials' });
-    }
+//     // Compare the provided password with the hashed password stored in the database
 
-    // For successful login
+//     const isMatch = await bcrypt.compare(password, user.password);
 
-    return res.status(200).json({ message: 'Login successful', user });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-});
+//     if (!isMatch) {
+//       return res.status(400).json({ message: 'Invalid credentials' });
+//     }
 
-// Start the server
+//     // For successful login
 
-app.listen(3000, () => {
-  console.log('Server running on port 3000');
-});
+//     return res.status(200).json({ message: 'Login successful', user });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ message: 'Internal server error' });
+//   }
+// });
+
+// // Start the server
+
+// app.listen(3000, () => {
+//   console.log('Server running on port 3000');
+// });
