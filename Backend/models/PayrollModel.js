@@ -5,7 +5,7 @@ import {pool} from '../db.js'
 
 
   // GETTING INFORMATION FOR ALL EMPLOYEES
-  getAllPayrollInfo: async (req, res) => {
+  getAllPayrollInfo = async (req, res) => {
     try {
       const payrollData = await {pool}.getPayrollInfo();
       res.json(payrollData); 
@@ -17,7 +17,7 @@ import {pool} from '../db.js'
   };
 
   // GETTING INFORMATION FOR A SPECIFIC EMPLOYEE
-  getEmployeePayroll: async (req, res) => {
+  getEmployeePayroll = async (req, res) => {
     const { employeeId } = req.params;
     try {
       const payrollData = await {pool}.getEmployeePayroll(employeeId);
@@ -32,7 +32,7 @@ import {pool} from '../db.js'
   };
 
   // ADD A NEW PAYROLL ENTRY (FOR AN EMPLOYEE) 
-  addPayrollEntry: async (req, res) => {
+  addPayrollEntry = async (req, res) => {
     const { payroll_id, employeeId, hoursWorked, leaveDeductions, finalSalary } = req.body;
 
     // CHECKING NECESSARY DATA FIRST 
@@ -52,4 +52,4 @@ import {pool} from '../db.js'
 
 
   
-  export default {getAllPayrollInfo, getEmployeePayroll, addPayrollEntry}
+  export {getAllPayrollInfo, getEmployeePayroll, addPayrollEntry}

@@ -45,4 +45,4 @@ const updateEmployee = async (employee_id, name, department_id, position_id, ema
     }
 };
 
-export { getEmployees, addNewEmployee, deleteEmployee, updateEmployee };
+export { getEmployees,  mployee, updateEmployee };
