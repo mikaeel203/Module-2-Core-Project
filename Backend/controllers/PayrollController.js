@@ -5,7 +5,7 @@ import {getAllPayrollInfo, getEmployeePayroll, addPayrollEntry} from "../Payroll
 
 // GETTING PAYROLL INFORMATION FOR ALL EMPLOYEES
 
-const getAllPayrollInfo = () => {
+const getAllPayrollInfoM = () => {
   return new Promise((resolve, reject) => {
     const query = `
       SELECT 
@@ -57,6 +57,6 @@ const addPayrollEntry = (employeeId, hoursWorked, leaveDeductions, finalSalary) 
   });
 };
 
-export {getAllPayrollInfo , getEmployeePayroll, addPayrollEntry};
+export {getAllPayrollInfoM , getEmployeePayroll, addPayrollEntry};
 
 
