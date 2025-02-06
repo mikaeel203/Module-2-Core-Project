@@ -1,20 +1,27 @@
-import mysql from "mysql2";
+import mysql from "mysql2/promise";
 import {config} from "dotenv"
 config()
 
-const db = mysql.createConnection({
+const pool = mysql.createPool({
     host: process.env.HOST,
     user: process.env.USER,
     password: process.env.PASSWORD,
-    database: process.env.DATABASE
+    database: process.env.DATABASE,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
 });
 
-db.connect(err => {
-    if (err) {
-        console.error("Database Connection Failed: " + err.stack);
-        return;
+const testConnection = async () => {
+    try {
+        const connection = await pool.getConnection();
+        console.log("Connected to MySQL Database.");
+        connection.release(); // Release connection back to pool
+    } catch (err) {
+        console.error("Database Connection Failed:", err);
     }
-    console.log("Connected to MySQL Database.");
-});
+};
 
-export {db}
+testConnection();
+
+export { pool };

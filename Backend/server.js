@@ -5,7 +5,7 @@ import express from 'express'
 import employeeRoutes from "./routes/EmployeeRouter.js";
 import payrollRoutes from "./routes/PayrollRouter.js";
 import attendanceRoutes from "./routes/AttendanceRouter.js";
-import leaveRoutes from "./routes/leaveRequestsRouter.js";
+import leaveRequestsRoutes from "./routes/leaveRequestsRouter.js";
 
 
 const app = express();
@@ -15,7 +15,7 @@ app.use(express.json());
 app.use("/employees", employeeRoutes);
 app.use("/payroll", payrollRoutes);
 app.use("/attendance", attendanceRoutes);
-app.use("/leaveRequests", leaveRoutes);
+app.use("/leaveRequests", leaveRequestsRoutes);
 
 const PORT = process.env.PORT || 3000;
 

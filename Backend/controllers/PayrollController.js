@@ -1,24 +1,11 @@
-//PAYROLL CONTROLLER
+//
 
-import mysql from "mysql2";
+import {getAllPayrollInfo, getEmployeePayroll, addPayrollEntry} from "../PayrollModel.js";
 
-// DATABASE SETUP
-
-const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "*PASSWORD", 
-  database: "moderntech_db", 
-});
-
-db.connect((err) => {
-  if (err) throw err;
-  console.log("CONNECTED SUCCESSFULLY TO DB");
-});
 
 // GETTING PAYROLL INFORMATION FOR ALL EMPLOYEES
 
-const getPayrollInfo = () => {
+const getAllPayrollInfo = () => {
   return new Promise((resolve, reject) => {
     const query = `
       SELECT 
@@ -70,9 +57,6 @@ const addPayrollEntry = (employeeId, hoursWorked, leaveDeductions, finalSalary) 
   });
 };
 
-export {
-  getPayrollInfo,
-  getEmployeePayroll,
-  addPayrollEntry,
-};
+export {getAllPayrollInfo , getEmployeePayroll, addPayrollEntry};
+
 

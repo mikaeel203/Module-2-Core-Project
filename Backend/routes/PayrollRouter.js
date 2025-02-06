@@ -1,13 +1,13 @@
-//PAYROLL ROUTER
+//PayrollRouter
 
 import express from "express";
 
-import { getAllPayrollInfo, getEmployeePayroll, addPayrollEntry } from "../controllers/payrollController.js";
+import { getPayrollInfo, getEmployeePayroll, addPayrollEntry} from "../controllers/PayrollController.js";
 
 const router = express.Router();
 
 //ROUTER FOR GETTING PAYROLL FOR ALL EMPLOYEES
-router.get("/", getAllPayrollInfo);
+router.get("/", getPayrollInfo);
 
 //ROUTER FOR GETTING PAYROLL FOR A SPECIFIC
 router.get("/:employeeId", getEmployeePayroll);
