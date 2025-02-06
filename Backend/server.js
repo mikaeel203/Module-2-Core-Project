@@ -1,21 +1,21 @@
-const express = require("express");
-const cors = require("cors");
-const bodyParser = require("body-parser");
+import express from 'express'
+import cors from 'cors'
+// import bodyParser from "from r"
 
-const employeeRoutes = require("./routes/employees");
-const payrollRoutes = require("./routes/payroll");
-const attendanceRoutes = require("./routes/attendance");
-const leaveRoutes = require("./routes/leaveRequests");
+import employeeRoutes from "./routes/EmployeeRouter.js";
+import payrollRoutes from "./routes/PayrollRouter.js";
+import attendanceRoutes from "./routes/AttendanceRouter.js";
+import leaveRequestsRoutes from "./routes/leaveRequestsRouter.js";
 
 const app = express();
 app.use(cors());
-app.use(bodyParser.json());
+app.use(express.json());
 
 app.use("/employees", employeeRoutes);
 app.use("/payroll", payrollRoutes);
 app.use("/attendance", attendanceRoutes);
-app.use("/leaveRequests", leaveRoutes);
+app.use("/leaveRequests", leaveRequestsRoutes);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => console.log('Server running on port ', PORT));
 
