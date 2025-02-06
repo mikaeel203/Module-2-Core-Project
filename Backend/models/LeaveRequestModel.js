@@ -1,21 +1,50 @@
-import {pool} from '../db.js'
+import { db } from '../db.js';
 
-const getLeaveRequestsModel = async() =>{
-    let [data] = await db.query("SELECT * FROM moderntech_db.leave_requests;")
-    return data
-}
+// Get all leave requests
+const getLeaveRequestsModel = async () => {
+    try {
+        const [data] = await db.promise().query("SELECT * FROM moderntech_db.leave_requests;");
+        return data;
+    } catch (error) {
+        console.error("Database query error (Leave Requests):", error);
+        throw new Error("Failed to retrieve leave requests.");
+    }
+};
 
-const patchLeaveReqToUpdateModel = async() =>{
-    let [data] = await db.query("") //emprty as an update query goes here
-    return data
-}
+// Update leave request status (Approve/Deny) 
+const patchLeaveReqToUpdateModel = async (leaveData) => {
+    try {
+        // Assuming leaveData contains { leaveId, status }
+        const { leaveId, status } = leaveData;
+        if (!leaveId || !status) {
+            throw new Error("Invalid leave data. 'leaveId' and 'status' are required.");
+        }
 
-const getEmployeeLeaveHistoryModel = async() =>{
-    let [data] = await db.query("SELECT * FROM moderntech_db.leave_requests WHERE status != 'Pending'") 
-    return data
-}
+        const [data] = await db.promise().query(
+            "UPDATE moderntech_db.leave_requests SET status = ? WHERE id = ?",
+            [status, leaveId]
+        );
+        return data;
+    } catch (error) {
+        console.error("Database query error (Update Leave Request):", error);
+        throw new Error("Failed to update leave request.");
+    }
+};
 
-export {getLeaveRequestsModel, patchLeaveReqToUpdateModel, getEmployeeLeaveHistoryModel}
+// Get leave history (Approved/Denied)
+const getEmployeeLeaveHistoryModel = async () => {
+    try {
+        const [data] = await db.promise().query(
+            "SELECT * FROM moderntech_db.leave_requests WHERE status != 'Pending';"
+        );
+        return data;
+    } catch (error) {
+        console.error("Database query error (Employee Leave History):", error);
+        throw new Error("Failed to retrieve employee leave history.");
+    }
+};
+
+export { getLeaveRequestsModel, patchLeaveReqToUpdateModel, getEmployeeLeaveHistoryModel };
 
 
 

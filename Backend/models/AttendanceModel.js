@@ -1,17 +1,29 @@
-import {pool} from "../db.js"
+import { db } from "../db.js";
 
-//to get all the record data from the db to show when an employee is working
-const getEmployeeAttendanceForCalenderMfunc = async () =>{
-    let [data] = await pool.query('')  
-}
-// this is going to need more going into as dates worked has no data for this --- query will be empty for now
+// To get all the record data from the DB to show when an employee is working
+const getEmployeeAttendanceForCalenderMfunc = async () => {
+    try {
+        const [data] = await db.promise().query(""); // Query will be updated later
+        return data;
+    } catch (error) {
+        console.error("Database query error (Calendar Attendance):", error);
+        throw new Error("Failed to retrieve calendar attendance data.");
+    }
+};
 
-// to get all the eemployees to show their attendance history
-const getEmployeeAttendanceForRecordMfunc = async () =>{
-    let [data] = await pool.query('SELECT * FROM moderntech_db.attendance;')
-}
+// To get all employees to show their attendance history
+const getEmployeeAttendanceForRecordMfunc = async () => {
+    try {
+        const [data] = await db.promise().query("SELECT * FROM moderntech_db.attendance;");
+        return data;
+    } catch (error) {
+        console.error("Database query error (Attendance Record):", error);
+        throw new Error("Failed to retrieve attendance records.");
+    }
+};
 
-export {getEmployeeAttendanceForCalenderMfunc, getEmployeeAttendanceForRecordMfunc}
+export { getEmployeeAttendanceForCalenderMfunc, getEmployeeAttendanceForRecordMfunc };
+
 
 //NOT NEEDED FOR NOW
 // const express = require("express");

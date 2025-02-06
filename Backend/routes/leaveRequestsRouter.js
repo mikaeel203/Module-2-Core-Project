@@ -1,12 +1,19 @@
-import express from 'express'
-import {getLeaveRequestsCon, patchLeaveReqToUpdateCon, getEmployeeLeaveHistoryCon} from '../controllers/LeaveRequestController.js'
-const router = express.Router()
+import express from 'express';
+const router = express.Router();
 
-//getting the leave request data and getting it to update whether their leave was approved or denied
-router.get('/', getLeaveRequestsCon)
-router.patch('/', patchLeaveReqToUpdateCon)
+import { 
+    getLeaveRequestsCon, 
+    patchLeaveReqToUpdateCon, 
+    getEmployeeLeaveHistoryCon 
+} from '../controllers/LeaveRequestController.js';
 
-//Employee leave history as such in the History tab
-router.get('', getEmployeeLeaveHistoryCon)
+// Retrieve all leave requests
+router.get('/requests', getLeaveRequestsCon);
 
-export default router
+// Update leave request status (Approve/Deny)
+router.patch('/update', patchLeaveReqToUpdateCon);
+
+// Retrieve employee leave history (Approved/Denied)
+router.get('/history', getEmployeeLeaveHistoryCon);
+
+export default router;
