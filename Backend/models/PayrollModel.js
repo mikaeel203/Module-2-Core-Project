@@ -1,55 +1,55 @@
-//PayrollModel
+import { pool } from "../db.js";
 
-import {pool} from '../db.js'
+// GETTING PAYROLL INFORMATION FOR ALL EMPLOYEES
+const getAllPayrollInfoM = async () => {
+  try {
+    const query = `
+      SELECT 
+        e.employee_id, e.name, p.position_name, e.email,
+        pr.hours_worked, pr.leave_deductions, pr.final_salary
+      FROM Employees e
+      JOIN Position p ON e.position_id = p.position_id
+      JOIN Payroll pr ON e.employee_id = pr.employee_id
+    `;
+    const [results] = await pool.query(query); 
+    return results;
+  } catch (err) {
+    throw err;
+  }
+};
 
+// GETTING PAYROLL INFORMATION FOR A SPECIFIC EMPLOYEE 
+const getEmployeePayrollM = async (employeeId) => {
+  try {
+    const query = `
+      SELECT 
+        e.employee_id, e.name, p.position_name, e.email,
+        pr.hours_worked, pr.leave_deductions, pr.final_salary
+      FROM Employees e
+      JOIN Position p ON e.position_id = p.position_id
+      JOIN Payroll pr ON e.employee_id = pr.employee_id
+      WHERE e.employee_id = ?
+    `;
+    const [results] = await pool.query(query, [employeeId]);
+    return results;
+  } catch (err) {
+    throw err;
+  }
+};
 
+// UPDATING  PAYROLL RECORD IN THE DB FOR SPECIFIC EMPLOYEE 
 
-  // GETTING INFORMATION FOR ALL EMPLOYEES
-  getAllPayrollInfo = async (req, res) => {
-    try {
-      const payrollData = await {pool}.getPayrollInfo();
-      res.json(payrollData); 
-      
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: "Error retrieving payroll information" });
-    }
-  };
+const addPayrollEntryM = async (employeeId, hoursWorked, leaveDeductions, finalSalary) => {
+  try {
+    const query = `
+      INSERT INTO Payroll (employee_id, hours_worked, leave_deductions, final_salary)
+      VALUES (?, ?, ?, ?)
+    `;
+    const [result] = await pool.query(query, [employeeId, hoursWorked, leaveDeductions, finalSalary]); // Use promise-based query
+    return result;
+  } catch (err) {
+    throw err;
+  }
+};
 
-  // GETTING INFORMATION FOR A SPECIFIC EMPLOYEE
-  getEmployeePayroll = async (req, res) => {
-    const { employeeId } = req.params;
-    try {
-      const payrollData = await {pool}.getEmployeePayroll(employeeId);
-      if (payrollData.length === 0) {
-        return res.status(404).json({ message: "Employee not found" });
-      }
-      res.json(payrollData); 
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: "Error retrieving employee's payroll" });
-    }
-  };
-
-  // ADD A NEW PAYROLL ENTRY (FOR AN EMPLOYEE) 
-  addPayrollEntry = async (req, res) => {
-    const { payroll_id, employeeId, hoursWorked, leaveDeductions, finalSalary } = req.body;
-
-    // CHECKING NECESSARY DATA FIRST 
-    if (!payroll_id || !employeeId || !hoursWorked || !leaveDeductions || !finalSalary) {
-      return res.status(400).json({ message: "All fields are required" });
-    }
-
-    try {
-      // CALLING THE MODEL TO INSERT THE DATA PROVIDED IN THE DATABASE 
-      const result = await {pool}.addPayrollEntry(payroll_id, employeeId, hoursWorked, leaveDeductions, finalSalary);
-      res.status(201).json({ message: "Payroll entry added successfully!", result });
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: "Error adding payroll" });
-    }
-  };
-
-
-  
-  export {getAllPayrollInfo, getEmployeePayroll, addPayrollEntry}
+export { getAllPayrollInfoM, getEmployeePayrollM, addPayrollEntryM };

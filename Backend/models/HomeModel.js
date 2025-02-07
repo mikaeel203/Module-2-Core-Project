@@ -1,4 +1,4 @@
-import { db } from "../db.js";
+import { pool } from "../db.js";
 
 export const Dashboard = {
   getLeaveSummary: (callback) => {
@@ -9,6 +9,6 @@ export const Dashboard = {
         SUM(CASE WHEN status = 'Pending' THEN 1 ELSE 0 END) AS pending
       FROM LeaveRequests;
     `;
-    db.query(sql, callback);
+    pool.query(sql, callback);
   }
 };

@@ -1,9 +1,9 @@
-import { db } from '../db.js';
+import { pool } from '../db.js';
 
 // Get all leave requests
 const getLeaveRequestsModel = async () => {
     try {
-        const [data] = await db.promise().query("SELECT * FROM moderntech_db.leave_requests;");
+        const [data] = await pool.promise().query("SELECT * FROM moderntech_db.leave_requests;");
         return data;
     } catch (error) {
         console.error("Database query error (Leave Requests):", error);
@@ -20,7 +20,7 @@ const patchLeaveReqToUpdateModel = async (leaveData) => {
             throw new Error("Invalid leave data. 'leaveId' and 'status' are required.");
         }
 
-        const [data] = await db.promise().query(
+        const [data] = await pool.promise().query(
             "UPDATE moderntech_db.leave_requests SET status = ? WHERE id = ?",
             [status, leaveId]
         );
@@ -34,7 +34,7 @@ const patchLeaveReqToUpdateModel = async (leaveData) => {
 // Get leave history (Approved/Denied)
 const getEmployeeLeaveHistoryModel = async () => {
     try {
-        const [data] = await db.promise().query(
+        const [data] = await pool.promise().query(
             "SELECT * FROM moderntech_db.leave_requests WHERE status != 'Pending';"
         );
         return data;
