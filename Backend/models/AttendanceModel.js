@@ -1,4 +1,4 @@
-import { pool } from "../db.js";
+import { pool } from "../config/db.js";
 
 // To get all the record data from the pool to show when an employee is working
 const getEmployeeAttendanceForCalenderMfunc = async () => {
