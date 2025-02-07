@@ -1,4 +1,4 @@
-import { pool } from '../db.js';
+import { pool } from '../config/db.js';
 
 // Get all leave requests
 const getLeaveRequestsModel = async () => {
@@ -20,7 +20,7 @@ const patchLeaveReqToUpdateModel = async (leaveData) => {
             throw new Error("Invalid leave data. 'leaveId' and 'status' are required.");
         }
 
-        const [data] = await pool.promise().query(
+        const [data] = await pool.query(
             "UPDATE moderntech_db.leave_requests SET status = ? WHERE id = ?",
             [status, leaveId]
         );
@@ -34,7 +34,7 @@ const patchLeaveReqToUpdateModel = async (leaveData) => {
 // Get leave history (Approved/Denied)
 const getEmployeeLeaveHistoryModel = async () => {
     try {
-        const [data] = await pool.promise().query(
+        const [data] = await pool.query(
             "SELECT * FROM moderntech_db.leave_requests WHERE status != 'Pending';"
         );
         return data;
@@ -50,14 +50,14 @@ export { getLeaveRequestsModel, patchLeaveReqToUpdateModel, getEmployeeLeaveHist
 
 
 // const express = require("express");
-// const db = require("../db");
+// const pool = require("../pool");
 // const router = express.Router()
 
 
 
 // router.get("/", async (req, res) => {
 //     try {
-//         const [results] = await db.promise().query("SELECT * FROM LeaveRequests");
+//         const [results] = await pool.promise().query("SELECT * FROM LeaveRequests");
 //         res.json(results);
 //     } catch (err) {
 //         res.status(500).send(err);
@@ -69,7 +69,7 @@ export { getLeaveRequestsModel, patchLeaveReqToUpdateModel, getEmployeeLeaveHist
 // router.post("/", async (req, res) => {
 //     try {
 //         const { leaveId, employeeId, date, reason, status } = req.body;
-//         const [results] = await db.promise().query(
+//         const [results] = await pool.promise().query(
 //             "INSERT INTO LeaveRequests (leaveId, employeeId, date, reason, status) VALUES (?, ?, ?, ?, ?)",
 //             [leaveId, employeeId, date, reason, statuss]
 //         );

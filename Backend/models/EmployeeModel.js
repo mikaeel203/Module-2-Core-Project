@@ -1,4 +1,5 @@
-import { pool } from '../db.js';
+import { pool } from '../config/db.js';
+
 
 const getEmployees = async () => {
     try {
@@ -45,4 +46,4 @@ const updateEmployee = async (employee_id, name, department_id, position_id, ema
     }
 };
 
-export { getEmployees,  deleteEmployee, addNewEmployee, updateEmployee };
+export { getEmployees, deleteEmployee , updateEmployee, addNewEmployee };

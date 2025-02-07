@@ -1,15 +1,17 @@
-import { getEmployeeAttendanceForCalenderMfunc, getEmployeeAttendanceForRecordMfunc } from "../models/AttendanceModel.js"; 
+import { 
+    // getEmployeeAttendanceForCalenderMfunc, 
+    getEmployeeAttendanceForRecordMfunc } from "../models/AttendanceModel.js"; 
 
 // Controller for calendar attendance
-const getEmployeeAttendanceForCalender = async (req, res) => {
-    try {
-        const attendanceCalender = await getEmployeeAttendanceForCalenderMfunc();
-        res.json({ Attendance_calender: attendanceCalender });
-    } catch (error) {
-        console.error("Error fetching attendance for calendar:", error);
-        res.status(500).json({ message: "Internal Server Error", error: error.message });
-    }
-};
+// const getEmployeeAttendanceForCalender = async (req, res) => {
+//     try {
+//         const attendanceCalender = await getEmployeeAttendanceForCalenderMfunc();
+//         res.json({ Attendance_calender: attendanceCalender });
+//     } catch (error) {
+//         console.error("Error fetching attendance for calendar:", error);
+//         res.status(500).json({ message: "Internal Server Error", error: error.message });
+//     }
+// };
 
 // Controller for attendance data|record
 const getEmployeeAttendanceForRecord = async (req, res) => {
@@ -22,4 +24,6 @@ const getEmployeeAttendanceForRecord = async (req, res) => {
     }
 };
 
-export { getEmployeeAttendanceForCalender, getEmployeeAttendanceForRecord };
+export { 
+    // getEmployeeAttendanceForCalender, 
+    getEmployeeAttendanceForRecord };
