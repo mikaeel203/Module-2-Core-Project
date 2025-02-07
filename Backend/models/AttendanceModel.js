@@ -1,20 +1,20 @@
 import { pool } from "../db.js";
 
 // To get all the record data from the pool to show when an employee is working
-const getEmployeeAttendanceForCalenderMfunc = async () => {
-    try {
-        const [data] = await pool.promise().query(""); // Query will be updated later
-        return data;
-    } catch (error) {
-        console.error("Database query error (Calendar Attendance):", error);
-        throw new Error("Failed to retrieve calendar attendance data.");
-    }
-};
+// const getEmployeeAttendanceForCalenderMfunc = async () => {
+//     try {
+//         const [data] = await pool.promise().query(""); // Query will be updated later
+//         return data;
+//     } catch (error) {
+//         console.error("Database query error (Calendar Attendance):", error);
+//         throw new Error("Failed to retrieve calendar attendance data.");
+//     }
+// };
 
 // To get all employees to show their attendance history
 const getEmployeeAttendanceForRecordMfunc = async () => {
     try {
-        const [data] = await pool.promise().query("SELECT * FROM moderntech_pool.attendance;");
+        const [data] = await pool.query("SELECT * FROM moderntech_db.attendance;");
         return data;
     } catch (error) {
         console.error("Database query error (Attendance Record):", error);
@@ -22,7 +22,9 @@ const getEmployeeAttendanceForRecordMfunc = async () => {
     }
 };
 
-export { getEmployeeAttendanceForCalenderMfunc, getEmployeeAttendanceForRecordMfunc };
+export { 
+    // getEmployeeAttendanceForCalenderMfunc,
+    getEmployeeAttendanceForRecordMfunc };
 
 
 //NOT NEEDED FOR NOW
