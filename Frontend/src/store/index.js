@@ -516,18 +516,37 @@ export default createStore({
   },
   actions: {
     // integrate employee backend with frontend
+    // Get information of all employees
     async getData({commit}, payload){
         let {employees} = await (await fetch('http://localhost:3000/employees')).json()
         commit('setEmployees', employees)
     },
+    // delete employee
     async deleteEmployee({commit}, employee_id){
         await fetch('http://localhost:3000/employees/'+employee_id,{
             method:'DELETE'
         })
         location.reload()
     },
+    // add new employee
     async postEmployee({commit},employee){
-        console.log(employee)
+        await fetch('http://localhost:3000/employees/',{
+            method:'POST',
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify({
+                name:employee.name,
+                employee_id:employee.employee_id,
+                position_name:employee.position_name,
+                department_name:employee.department_name,
+                salary:employee.salary,
+                employment_history:employee.employment_history,
+                email:employee.email
+            })
+        })
+        location.reload()
+        
     }
   },
   modules: {

@@ -21,9 +21,7 @@
     </button>
 
     <!-- Employee Card -->
-    <div v-for="employee in $store.state.employees" :key="employee.employeeId" class="employee-card">
-
-    <!-- <div v-for="employee in filteredEmployees" :key="employee.employeeId" class="employee-card"> -->
+    <div v-for="employee in $store.state.employees" :key="employee.employee_id" class="employee-card">
       <!-- Edit the emp button -->
       <button 
         class="edit-btn" 
@@ -42,12 +40,12 @@
 
       <!-- Employee info -->
       <h5 class="employee-name">{{ employee.name }}</h5>
-      <p class="employee-info">ID: {{ employee.employeeId }}</p>
-      <p class="employee-info">Position: {{ employee.position }}</p>
-      <p class="employee-info">Department: {{ employee.department }}</p>
+      <p class="employee-info">ID: {{ employee.employee_id }}</p>
+      <p class="employee-info">Position: {{ employee.position_name }}</p>
+      <p class="employee-info">Department: {{ employee.department_name }}</p>
       <p class="employee-info">Salary: R{{ employee.salary }}</p>
-      <p class="employee-info">History: {{ employee.employmentHistory }}</p>
-      <p class="employee-info">Contact: {{ employee.contact }}</p>
+      <p class="employee-info">History: {{ employee.employment_history }}</p>
+      <p class="employee-info">Contact: {{ employee.email }}</p>
 
       <!-- Review button -->
       <button 
@@ -63,25 +61,25 @@
       <div class="modal-content" @click.stop>
         <h3>Add New Employee</h3>
         <label for="addName">Name:</label>
-        <input v-model="name" id="addName" />
+        <input v-model="employees.name" id="addName" />
 
         <label for="addId">Employee ID:</label>
-        <input v-model="employee_id" id="addId" />
+        <input v-model="employees.employee_id" id="addId" />
 
         <label for="addPosition">Position:</label>
-        <input v-model="position_name" id="addPosition" />
+        <input v-model="employees.position_name" id="addPosition" />
 
         <label for="addDepartment">Department:</label>
-        <input v-model="department_name" id="addDepartment" />
+        <input v-model="employees.department_name" id="addDepartment" />
 
         <label for="addSalary">Salary:</label>
-        <input v-model="salary" id="addSalary" />
+        <input v-model="employees.salary" id="addSalary" />
 
         <label for="addHistory">History:</label>
-        <input v-model="start_date" id="addHistory" />
+        <input v-model="employees.employment_history" id="addHistory" />
 
         <label for="addContact">Contact:</label>
-        <input v-model="email" id="addContact" />
+        <input v-model="employees.email" id="addContact" />
 
         <button @click="postEmployee()">Add Employee</button>
         <button @click="closeModal">Cancel</button>
@@ -111,6 +109,19 @@
 export default {
   data() {
     return {
+      employees:[
+        {
+          name: null,
+          employee_id: null,
+          position_name: null,
+          department_name: null,
+          salary: null,
+          employment_history: null,
+          email: null
+      }
+
+],
+
       searchQuery: "",
       employeeDataRecieved: [],
       isAdding: false,
@@ -201,8 +212,8 @@ export default {
     deleteEmployee(employee_id){
       this.$store.dispatch('deleteEmployee',employee_id)
     },
-    postEmployee(){
-      this.$store.dispatch('postEmployee',this.$data)
+    postEmployee(employees){
+      this.$store.dispatch('postEmployee',this.employees)
     }
   },
   mounted() {

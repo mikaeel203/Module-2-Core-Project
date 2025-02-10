@@ -1,4 +1,4 @@
-import { getEmployees, addNewEmployee, deleteEmployee, updateEmployee } from '../models/EmployeeModel.js';
+import { getEmployees, addNewEmployee, deleteEmployee, updateEmployee, getSinglePosition, getSingleDepartment } from '../models/EmployeeModel.js';
 
 const getEmployeesCon = async (req, res) => {
     try {
@@ -12,9 +12,12 @@ const getEmployeesCon = async (req, res) => {
 
 const addNewEmployeeCon = async (req, res) => {
     try {
-        let { employee_id, name, department_id, position_id, email } = req.body;
+
+        let { employee_id, name, department_id, position_id, salary, email, position_name } = req.body;
+        position_id = await getSinglePosition(position_name)
+        department_id = await getSingleDepartment(department_name)
         console.log(req.body);
-        const employees = await addNewEmployee(employee_id, name, department_id, position_id, email);
+        const employees = await addNewEmployee(employee_id, name, department_id, position_id, salary, email);
         res.json({ employees });
     } catch (error) {
         console.error('Error adding new employee:', error);
