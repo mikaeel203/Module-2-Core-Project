@@ -35,45 +35,22 @@
       </div>
     </div>
 
-    <!-- Graph Section -->
-    <!-- <div class="container my-5">
-      <h2 class="section-title">HR Overview</h2>
-      <div class="graph-container">
-        <canvas id="hrGraph"></canvas>
-      </div>
-    </div> -->
-
     <!-- Footer Section -->
     <footer>
       <div class="social-buttons">
-        <a
-          class="social-button facebook"
-          href="https://www.facebook.com/"
-          target="_blank"
+        <a class="social-button facebook" href="https://www.facebook.com/" target="_blank"
           ><i class="fab fa-facebook-f"></i
         ></a>
-        <a
-          class="social-button linkedin"
-          href="https://www.linkedin.com/"
-          target="_blank"
+        <a class="social-button linkedin" href="https://www.linkedin.com/" target="_blank"
           ><i class="fab fa-linkedin"></i
         ></a>
-        <a
-          class="social-button tiktok"
-          href="https://www.tiktok.com/"
-          target="_blank"
+        <a class="social-button tiktok" href="https://www.tiktok.com/" target="_blank"
           ><i class="fab fa-tiktok"></i
         ></a>
-        <a
-          class="social-button youtube"
-          href="https://www.youtube.com/"
-          target="_blank"
+        <a class="social-button youtube" href="https://www.youtube.com/" target="_blank"
           ><i class="fab fa-youtube"></i
         ></a>
-        <a
-          class="social-button instagram"
-          href="https://www.instagram.com/"
-          target="_blank"
+        <a class="social-button instagram" href="https://www.instagram.com/" target="_blank"
           ><i class="fab fa-instagram"></i
         ></a>
       </div>
@@ -85,47 +62,28 @@
 </template>
 
 <script>
-import { Chart } from "chart.js";
+import { mapActions, mapState } from "vuex";
 
 export default {
   name: "HomePage",
-  data() {
-    return {
-      approved: 6,
-      denied: 2,
-      pending: 7,
-    };
-  },
-  mounted() {
-    // this.renderGraph();
+  computed: {
+    ...mapState(["leaveSummary"]),
+    approved() {
+      return this.leaveSummary?.approved || 0;
+    },
+    denied() {
+      return this.leaveSummary?.denied || 0;
+    },
+    pending() {
+      return this.leaveSummary?.pending || 0;
+    }
   },
   methods: {
-    // renderGraph() {
-    //   const ctx = document.getElementById("hrGraph").getContext("2d");
-    //   new Chart(ctx, {
-    //     type: "bar",
-    //     data: {
-    //       labels: ["Total Employees", "Departments", "Increased Performance"],
-    //       datasets: [
-    //         {
-    //           label: "Statistics",
-    //           data: [10, 10, 50],
-    //           backgroundColor: ["#007bff", "#28a745", "#ffc107"],
-    //           borderWidth: 1,
-    //         },
-    //       ],
-    //     },
-    //     options: {
-    //       responsive: true,
-    //       plugins: {
-    //         legend: {
-    //           display: false,
-    //         },
-    //       },
-    //     },
-    //   });
-    // },
+    ...mapActions(["getLeaveSummary"])
   },
+  mounted() {
+    this.getLeaveSummary();
+  }
 };
 </script>
 
@@ -211,12 +169,6 @@ export default {
   color: #ffc107;
 }
 
-/* Graph Styles */
-.graph-container {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
 /* Footer Styles */
 footer {
   background: #f7f9fc;
@@ -243,89 +195,5 @@ footer {
 .footer-text {
   font-size: 0.875rem;
   color: #666;
-}
-
-
-/* Laptop (1024px) */
-@media (max-width: 1024px) {
-  .container {
-    width: 90%;
-    padding: 15px;
-  }
-
-  body {
-    font-size: 15px;
-  }
-}
-
-/* Tablet (768px) */
-@media (max-width: 768px) {
-  .container {
-    width: 95%;
-    padding: 10px;
-  }
-
-  body {
-    font-size: 14px;
-  }
-
-  .header {
-    font-size: 18px;
-    text-align: center;
-  }
-}
-
-/* Mobile L (425px) */
-@media (max-width: 425px) {
-  .container {
-    width: 100%;
-    padding: 5px;
-  }
-
-  body {
-    font-size: 13px;
-  }
-
-  .header {
-    font-size: 16px;
-  }
-
-  .button {
-    width: 100%;
-    font-size: 14px;
-    padding: 10px;
-  }
-}
-
-/* Mobile M (375px) */
-@media (max-width: 375px) {
-  body {
-    font-size: 12px;
-  }
-
-  .header {
-    font-size: 14px;
-  }
-
-  .button {
-    font-size: 13px;
-    padding: 8px;
-  }
-}
-
-/* Mobile S (320px) */
-@media (max-width: 320px) {
-  body {
-    font-size: 11px;
-  }
-
-  .header {
-    font-size: 12px;
-  }
-
-  .button {
-    font-size: 12px;
-    padding: 6px;
-  }
 }
 </style>

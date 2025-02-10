@@ -1,6 +1,6 @@
 <template>
   <div class="login-container">
-    <!-- Left Side -->
+    <!-- Left Section -->
     <div class="left-section">
       <div class="logo">
         <img src="../assets/modernTech Logo.jpg" alt="Company Logo" />
@@ -12,7 +12,7 @@
     <!-- Divider -->
     <div class="divider"></div>
 
-    <!-- right -->
+    <!-- Right Section -->
     <div class="right-section">
       <h2>Login</h2>
       <form @submit.prevent="login">
@@ -25,7 +25,9 @@
           <input type="password" v-model="password" id="password" required />
         </div>
         <p class="error-message" v-if="errorMessage">{{ errorMessage }}</p>
-        <button type="submit">Login</button>
+        <button type="submit" :disabled="loading">
+          {{ loading ? "Logging in..." : "Login" }}
+        </button>
         <div class="forgot-password">
           <a href="#">Forgot Password?</a>
         </div>
@@ -34,32 +36,45 @@
   </div>
 </template>
 
-
-
 <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
-      username: '',
-      password: '',
-      errorMessage: '', // Holds the error message for invalid credentials
+      username: "",
+      password: "",
+      errorMessage: "",
+      loading: false,
     };
   },
   methods: {
-    login() {
-      if (this.username === 'admin' && this.password === 'password321') {
-        localStorage.setItem('isAuthenticated', 'true'); // Save authentication state
-        this.$router.push('/home'); // Redirect to the protected route
-      } else {
-        this.errorMessage = 'Invalid credentials';
-        this.username = ''; // Clear input fields
-        this.password = '';
+    async login() {
+      this.loading = true;
+      this.errorMessage = "";
+
+      try {
+        const response = await axios.post("http://localhost:3000/login", {
+          username: this.username,
+          password: this.password,
+        });
+
+        // Save token to localStorage
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+
+        // Redirect to home
+        this.$router.push("/home");
+      } catch (error) {
+        this.errorMessage =
+          error.response?.data?.message || "Login failed. Please try again.";
+      } finally {
+        this.loading = false;
       }
     },
   },
 };
 </script>
-
 
 <style scoped> 
 .login-container {

@@ -1,4 +1,4 @@
-drop schema if exists moderntech_db;
+-- drop schema if exists moderntech_db;
 CREATE SCHEMA `moderntech_db` ;
 use moderntech_db;
 

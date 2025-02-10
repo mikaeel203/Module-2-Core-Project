@@ -3,25 +3,29 @@ import cors from 'cors';
 import express from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 import { pool } from './config/db.js'; 
 import authMiddleware from './middleware/authMiddleware.js';
+
+// Load environment variables
+dotenv.config();
 
 // Initialize Express app
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Import routes (Move these above usage)
+// Import routes
 import employeeRoutes from "./routes/EmployeeRouter.js";
-// import payrollRoutes from "./routes/PayrollRouter.js";
 import attendanceRoutes from "./routes/AttendanceRouter.js";
 import leaveRequestsRoutes from "./routes/leaveRequestsRouter.js";
+// import payrollRoutes from "./routes/PayrollRouter.js"
 
 // Routes
 app.use("/employees", employeeRoutes);
-// app.use("/payroll", payrollRoutes);
 app.use("/attendance", attendanceRoutes);
 app.use("/leaveRequests", leaveRequestsRoutes);
+// app.use("/payroll", payrollRoutes)
 
 // Register Route
 app.post('/register', async (req, res) => {
@@ -55,19 +59,24 @@ app.post('/login', async (req, res) => {
         }
 
         // Query database for user
-        const [rows] = await pool.execute('SELECT * FROM users WHERE username = ?', [username]);
+        const [rows] = await pool.execute('SELECT id, username, password FROM users WHERE username = ?', [username]);
 
         if (rows.length === 0) {
             return res.status(400).json({ message: "Invalid username or password" });
         }
 
-        const user = rows[0]; // Fix: Extract user correctly
+        const user = rows[0];
 
         // Compare entered password with hashed password
         const isMatch = await bcrypt.compare(password, user.password);
 
         if (!isMatch) {
             return res.status(400).json({ message: "Invalid username or password" });
+        }
+
+        // Ensure JWT_SECRET is loaded
+        if (!process.env.JWT_SECRET) {
+            return res.status(500).json({ message: "Server error: Missing JWT_SECRET" });
         }
 
         // Generate JWT token
@@ -77,7 +86,7 @@ app.post('/login', async (req, res) => {
             { expiresIn: '1h' }
         );
 
-        return res.status(200).json({ message: "Login successful", token });
+        return res.status(200).json({ message: "Login successful", token, user: { id: user.id, username: user.username } });
     } catch (err) {
         console.error("Login error:", err);
         res.status(500).json({ message: "Internal server error" });
@@ -91,4 +100,4 @@ app.get('/protected', authMiddleware, (req, res) => {
 
 // Start server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}`));
