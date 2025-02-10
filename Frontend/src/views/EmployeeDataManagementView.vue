@@ -1,6 +1,9 @@
 <template>
   <div class="employee-dashboard">
 
+    <!-- check if mutations and stat is working -->
+      <!-- {{ $store.state.employees }} -->
+
     <!-- Search Bar -->
     <input 
       type="text" 
@@ -18,7 +21,9 @@
     </button>
 
     <!-- Employee Card -->
-    <div v-for="employee in filteredEmployees" :key="employee.employeeId" class="employee-card">
+    <div v-for="employee in $store.state.employees" :key="employee.employeeId" class="employee-card">
+
+    <!-- <div v-for="employee in filteredEmployees" :key="employee.employeeId" class="employee-card"> -->
       <!-- Edit the emp button -->
       <button 
         class="edit-btn" 
@@ -30,7 +35,7 @@
       <!-- Remove button -->
       <button 
         class="remove-btn" 
-        @click="removeEmployee(employee.employeeId)"
+        @click="deleteEmployee(employee.employee_id)"
       >
         Remove
       </button>
@@ -58,24 +63,27 @@
       <div class="modal-content" @click.stop>
         <h3>Add New Employee</h3>
         <label for="addName">Name:</label>
-        <input v-model="newEmployee.name" id="addName" />
+        <input v-model="name" id="addName" />
+
+        <label for="addId">Employee ID:</label>
+        <input v-model="employee_id" id="addId" />
 
         <label for="addPosition">Position:</label>
-        <input v-model="newEmployee.position" id="addPosition" />
+        <input v-model="position_name" id="addPosition" />
 
         <label for="addDepartment">Department:</label>
-        <input v-model="newEmployee.department" id="addDepartment" />
+        <input v-model="department_name" id="addDepartment" />
 
         <label for="addSalary">Salary:</label>
-        <input v-model="newEmployee.salary" id="addSalary" />
+        <input v-model="salary" id="addSalary" />
 
         <label for="addHistory">History:</label>
-        <input v-model="newEmployee.employmentHistory" id="addHistory" />
+        <input v-model="start_date" id="addHistory" />
 
         <label for="addContact">Contact:</label>
-        <input v-model="newEmployee.contact" id="addContact" />
+        <input v-model="email" id="addContact" />
 
-        <button @click="addEmployee">Add Employee</button>
+        <button @click="postEmployee()">Add Employee</button>
         <button @click="closeModal">Cancel</button>
       </div>
     </div>
@@ -190,6 +198,12 @@ export default {
       this.isReviewing = false;
       this.resetNewEmployee();
     },
+    deleteEmployee(employee_id){
+      this.$store.dispatch('deleteEmployee',employee_id)
+    },
+    postEmployee(){
+      this.$store.dispatch('postEmployee',this.$data)
+    }
   },
   mounted() {
     this.cloneData();

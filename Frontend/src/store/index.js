@@ -519,6 +519,15 @@ export default createStore({
     async getData({commit}, payload){
         let {employees} = await (await fetch('http://localhost:3000/employees')).json()
         commit('setEmployees', employees)
+    },
+    async deleteEmployee({commit}, employee_id){
+        await fetch('http://localhost:3000/employees/'+employee_id,{
+            method:'DELETE'
+        })
+        location.reload()
+    },
+    async postEmployee({commit},employee){
+        console.log(employee)
     }
   },
   modules: {
