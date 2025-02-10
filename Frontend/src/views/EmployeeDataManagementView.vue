@@ -1,5 +1,6 @@
 <template>
   <div class="employee-dashboard">
+
     <!-- Search Bar -->
     <input 
       type="text" 
@@ -192,6 +193,7 @@ export default {
   },
   mounted() {
     this.cloneData();
+    this.$store.dispatch('getData');
   },
 };
 </script>

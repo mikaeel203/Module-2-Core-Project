@@ -502,14 +502,24 @@ export default createStore({
         "leaveDeductions": 4,
         "finalSalary": 57750
     }
-]
+],
+// create variables to fetch data
+    employees:null
 
   },
   getters: {
   },
   mutations: {
+    setEmployees(state,payload){
+        state.employees = payload
+    }
   },
   actions: {
+    // integrate employee backend with frontend
+    async getData({commit}, payload){
+        let {employees} = await (await fetch('http://localhost:3000/employees')).json()
+        commit('setEmployees', employees)
+    }
   },
   modules: {
   }
