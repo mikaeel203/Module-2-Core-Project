@@ -214,6 +214,21 @@ export default {
     },
     postEmployee(employees){
       this.$store.dispatch('postEmployee',this.employees)
+    },
+    async saveChanges() {
+        let updatedData = {
+            name: this.employee.name,
+            department_id: this.employee.department_id,
+            department_name: this.employee.department_name, 
+            position_id: this.employee.position_id,
+            position_name: this.employee.position_name, 
+            email: this.employee.email
+        };
+
+        await this.$store.dispatch('updateEmployee', { 
+            employee_id: this.employee.employee_id, 
+            updatedData 
+        });
     }
   },
   mounted() {

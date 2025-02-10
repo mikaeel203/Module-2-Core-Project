@@ -545,8 +545,18 @@ export default createStore({
                 email:employee.email
             })
         })
+        location.reload()    
+    },
+    // Edit employee information
+    async updateEmployee({commit}, {employee_id, updatedData}){
+        await fetch('http://localhost:3000/employees/'+employee_id,{
+            method: 'PATCH',
+            headers:{
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedData)
+        })
         location.reload()
-        
     }
   },
   modules: {
