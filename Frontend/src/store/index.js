@@ -574,6 +574,23 @@ export default createStore({
       } catch (error) {
         console.error("Failed to fetch leave summary data.", error);
       }
+    },
+    async patchEmployee({commit}, employees){
+        // console.log(employees);
+        await fetch('http://localhost:3000/employees/'+employees.employee_id, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body:JSON.stringify({
+                name: employees.name,
+                department_id: employees.department_id,
+                position_id: employees.position_id,
+                salary: employees.salary,
+                email: employees.email 
+            })
+        })
+        location.reload(); 
     }
   },
   modules: {}

@@ -3,9 +3,14 @@
     <!-- Add Employee Button -->
     <button class="add-btn" @click="openAddModal">Add Employee</button>
 
+    <!-- Edit button -->
+     <edit-modal :employees="employees"/>
+
     <!-- Employee Cards -->
     <div v-for="employee in $store.state.employees" :key="employee.employee_id" class="employee-card">
-      <button class="edit-btn" @click="editEmployee(employee)">Edit</button>
+      <!-- <button class="edit-btn" @click="editEmployee(employee)">Edit</button> -->
+           <!-- Edit button -->
+     <edit-modal/>
       <button class="remove-btn" @click="deleteEmployee(employee.employee_id)">Remove</button>
 
       <h5 class="employee-name">{{ employee.name }}</h5>
@@ -50,7 +55,7 @@
     </div>
 
     <!-- Edit Employee Modal -->
-    <div v-if="isEditing" class="modal-overlay" @click="closeModal">
+    <!-- <div v-if="isEditing" class="modal-overlay" @click="closeModal">
       <div class="modal-content" @click.stop>
         <h3>Edit Employee Information</h3>
 
@@ -71,8 +76,8 @@
 
         <button @click="saveChanges()">Save Changes</button>
         <button @click="closeModal">Cancel</button>
-      </div>
-    </div>
+      </div> -->
+    <!-- </div> -->
 
     <!-- Review Modal -->
     <div v-if="isReviewing" class="modal-overlay" @click="closeModal">
@@ -89,6 +94,7 @@
 </template>
 
 <script>
+import editModal from '@/components/editModal.vue'
 export default {
   data() {
     return {
@@ -110,6 +116,9 @@ export default {
       selectedEmployee: {},
       reviewText: "",
     };
+  },
+  components:{
+    editModal
   },
   methods: {
     openAddModal() {
