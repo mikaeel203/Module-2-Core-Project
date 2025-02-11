@@ -1,6 +1,7 @@
 <template>
     <div class="calendar-container">
       <h2 class="text-center">Employee Attendance Calendar</h2>
+      
       <div class="calendar">
         <!-- Generate the calendar days -->
         <div v-for="date in dates" :key="date" class="calendar-card" @click="openModal(date)">

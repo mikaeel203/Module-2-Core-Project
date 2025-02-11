@@ -40,7 +40,7 @@
     
   <div class="row mb-2">
     <div class="col-6"><strong>Hourly Pay: </strong></div>
-    <div class="col-6">R{{ (employee.finalSalary/employee.hoursWorked).toFixed(2) }}</div>
+    <div class="col-6">R{{ (Number(employee.finalSalary)/Number(employee.hoursWorked)).toFixed(2) }}</div>
   </div>
   
   <div class="row mb-2">
@@ -50,12 +50,12 @@
   
   <div class="row mb-2">
     <div class="col-6"><strong>Final Pay:</strong></div>
-    <div class="col-6">R{{ employee.finalSalary.toFixed(2) }}</div>
+    <div class="col-6">R{{ Number(employee.finalSalary).toFixed(2) }}</div>
   </div>
   
   <div class="row mb-2">
     <div class="col-6"><strong>Annual Pay:</strong></div>
-    <div class="col-6">R{{ (employee.finalSalary*12).toFixed(2) }}</div>
+    <div class="col-6">R{{ Number(employee.finalSalary*12).toFixed(2) }}</div>
   </div>
   
 
@@ -80,7 +80,17 @@
 import jsPDF from 'jspdf';
 
 export default {
-  props: ['employee', 'modalId'],
+  props: {
+    employee: {
+      type: Object,
+      required: true,
+      default: () => ({}) // Ensures it always has a default value
+    },
+    modalId: {
+      type: String,
+      required: true
+    }
+  },
   methods: {
     downloadPDF() { //AI helped with functionalality of generating a payslip
       const doc = new jsPDF();
@@ -95,15 +105,15 @@ export default {
       doc.text(`Department: ${this.employee.department}`, 20, 50);
       doc.text(`Position: ${this.employee.position}`, 20, 60);
       doc.text(`Employee ID: ${this.employee.employeeId}`, 20, 70);
-      doc.text(`Worked Hours: ${this.employee.hoursWorked}`, 20, 80);
+      doc.text(`Worked Hours: ${Number(this.employee.hoursWorked)}`, 20, 80);
       doc.text(
-        `Hourly Pay: R${(this.employee.finalSalary / this.employee.hoursWorked).toFixed(2)}`,
+        `Hourly Pay: R${(Number(this.employee.finalSalary) / Number(this.employee.hoursWorked)).toFixed(2)}`,
         20,
         90
       );
       doc.text(`Leave Deductions: ${this.employee.leaveDeductions}`, 20, 100);
-      doc.text(`Final Pay: R${this.employee.finalSalary.toFixed(2)}`, 20, 110);
-      doc.text(`Annual Pay: R${(this.employee.finalSalary * 12).toFixed(2)}`, 20, 120);
+      doc.text(`Final Pay: R${Number(this.employee.finalSalary).toFixed(2)}`, 20, 110);
+      doc.text(`Annual Pay: R${(Number(this.employee.finalSalary) * 12).toFixed(2)}`, 20, 120);
 
       // Save the PDF
       doc.save(`${this.employee.name}_payslip.pdf`);

@@ -1,7 +1,15 @@
 <template>
     <div>
-      <h2 style="font-family: 'Roboto', sans-serif;">Attendance of employees   </h2>
+      <h2 style="font-family: 'Roboto', sans-serif;">Attendance of Employees   </h2>
   
+      <!-- <p>
+        {{ $store.state.LeaveReqnHistoryObj }}
+        <br>
+        <br>
+        <br>
+        {{ employees }}
+      </p> -->
+
       <!-- Search Bar -->
       <input
         type="text"
@@ -62,13 +70,16 @@
       // Filter employees based on the search query
       filteredEmployees() {
         const query = this.searchQuery.toLowerCase();
-        return this.employees.filter(
-          (employee) =>
+        return this.employees.filter((employee) =>
             employee.name.toLowerCase().includes(query) ||
             employee.employeeId.toString().includes(query)
         );
       },
     },
+    // BACKEND ADDED HERE
+    mounted(){
+      // this.$store.dispatch('getAttendanceRecord')
+    }
   };
   </script>
   

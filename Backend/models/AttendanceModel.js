@@ -1,20 +1,32 @@
 import { pool } from "../config/db.js";
 
-// To get all the record data from the pool to show when an employee is working
-// const getEmployeeAttendanceForCalenderMfunc = async () => {
-//     try {
-//         const [data] = await pool.promise().query(""); // Query will be updated later
-//         return data;
-//     } catch (error) {
-//         console.error("Database query error (Calendar Attendance):", error);
-//         throw new Error("Failed to retrieve calendar attendance data.");
-//     }
-// };
 
-// To get all employees to show their attendance history
+
+
+//Controller for the update of attendance
+// Update leave request status (Approved/Denied)
+export const updateLeaveRequestStatus = async (employeeId, date, status) => {
+    const [result] = await pool.execute(
+        "UPDATE Leave_Requests SET status = ? WHERE employee_id = ? AND date = ?",
+        [status, employeeId, date]
+    );
+    return result;
+};
+
+// Check if all leave requests are processed
+export const checkAllLeaveRequestsProcessed = async () => {
+    const [pendingRequests] = await pool.execute(
+        "SELECT COUNT(*) as count FROM Leave_Requests WHERE status = 'Pending'"
+    );
+    return pendingRequests[0].count === 0;
+};
+
+
+
+//Getting attendance record
 const getEmployeeAttendanceForRecordMfunc = async () => {
     try {
-        const [data] = await pool.query("SELECT * FROM moderntech_db.attendance;");
+        const [data] = await pool.query("SELECT e.employee_id AS employeeId,e.name AS name,a.date AS date,a.status AS status FROM Employees e JOIN Attendance a ON e.employee_id = a.employee_id ORDER BY e.employee_id, a.date;");
         return data;
     } catch (error) {
         console.error("Database query error (Attendance Record):", error);
@@ -22,45 +34,18 @@ const getEmployeeAttendanceForRecordMfunc = async () => {
     }
 };
 
+//model query for getting the history and leaveRequests
+const getEmployeeAttendanceForLeaveReqnHistroyMfunc = async () => {
+    try {
+        const [data] = await pool.query("SELECT e.name AS name, e.employee_id as employeeId, lr.date AS date, lr.reason AS reason, lr.status AS status FROM Employees e JOIN Leave_Requests lr ON e.employee_id = lr.employee_id ORDER BY lr.date;");
+        return data;
+    } catch (error) {
+        console.error("Database query error (Leave Requests):", error);
+        throw new Error("Failed to retrieve leaveRequests.");
+    }
+};
+
 export { 
-    // getEmployeeAttendanceForCalenderMfunc,
-    getEmployeeAttendanceForRecordMfunc };
+    getEmployeeAttendanceForLeaveReqnHistroyMfunc,
+    getEmployeeAttendanceForRecordMfunc, };
 
-
-//NOT NEEDED FOR NOW
-// const express = require("express");
-// const pool = require("../pool");
-// const router = express.Router()
-
-
-
-// router.get("/", async (req, res) => {
-//     try {
-//         const [results] = await pool.promise().query("SELECT * FROM Attendance");
-//         res.json(results);
-//     } catch (err) {
-//         res.status(500).send(err);
-//     }
-// });
-// router.post("/", async (req, res) => {
-//     try {
-//         const { AttendanceId, employeeId, date, status } = req.body;
-//         const [results] = await pool.promise().query(
-//             "INSERT INTO Attendance (AttendanceId, employeeId, date, status) VALUES (?, ?, ?, ?)",
-//             [AttendanceId, employeeId, date, status]
-//         );
-//         res.json({ message: "Attendance Recorded succesfully!", id: results.insertId });
-//     } catch (err) {
-//         res.status(500).send(err);
-//     }
-// });
-
-// module.exports = router;
-
-// // Use delete (remove)
-
-
-// //Use patch (change specific part)
-
-
-// // use put (update)
