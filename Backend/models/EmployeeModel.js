@@ -40,6 +40,8 @@ const addNewEmployee = async (employee_id, name, department_id, position_id, ema
 
 const getSinglePosition = async(p_name)=>{
     let [[{position_id}]] = await pool.query('SELECT position_id FROM position WHERE position_name = ?',[p_name])
+    console.log(position_id);
+    
     return position_id
 }
 

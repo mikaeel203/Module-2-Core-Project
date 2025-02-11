@@ -571,6 +571,8 @@ export default createStore({
     //   location.reload();
     // },    
     async postEmployee({ commit }, employee) {
+        console.log(employee);
+        
       try {
         const response = await fetch('http://localhost:3000/employees/', {
           method: 'POST',
@@ -579,7 +581,9 @@ export default createStore({
             employee_id: employee.employee_id,
             name: employee.name,
             position_id: employee.position_id, // Send the position ID, not position_name
+            position_name: employee.position_name, // Send the position ID, not position_name
             department_id: employee.department_id, // Send the department ID, not department_name
+            department_name: employee.department_name, // Send the department ID, not department_name
             salary: employee.salary,
             email: employee.email,
           }),

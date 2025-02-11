@@ -28,7 +28,7 @@ const routes = [
   },
   {//HOME VIEW [STILL FIGURING OUT WHAT TO DO HERE - MAYBE SOME GRAPHS OR SOMETHING]
     path: '/home',
-    name: 'home',
+    name: 'home', 
     component: HomeView,
     // beforeEnter: (to, from, next) => {
     //   if (!isAuthenticated()) {

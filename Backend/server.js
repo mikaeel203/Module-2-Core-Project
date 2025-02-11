@@ -10,7 +10,7 @@ import { pool } from './config/db.js';
 dotenv.config();
 
 // Initialize Express app
-const app = express();
+const app = express();  
 
 // Session middleware
 app.use(

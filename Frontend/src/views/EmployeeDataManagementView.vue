@@ -78,7 +78,7 @@
         <label for="addContact">Contact:</label>
         <input v-model="employees.email" id="addContact" />
 
-        <button @click="postEmployee(employee)">Add Employee</button>
+        <button @click="postEmployee()">Add Employee</button>
         <button @click="closeModal">Cancel</button>
       </div>
     </div>
@@ -135,7 +135,7 @@
 export default {
   data() {
     return {
-      employees: [
+      employees: 
         {
           name: null,
           employee_id: null,
@@ -145,7 +145,6 @@ export default {
           employment_history: null,
           email: null,
         },
-      ],
 
       searchQuery: "",
       employeeDataRecieved: [],
@@ -241,7 +240,7 @@ export default {
     },
     // Add new employee
     postEmployee(employee) {
-      this.$store.dispatch("postEmployee", employee);
+      this.$store.dispatch("postEmployee", this.employees);
     },
 
     // Update employee's information
