@@ -1,30 +1,44 @@
 <template>
   <div>
-    <br>
+    <br />
     <div class="d-flex">
       <!-- Sidebar -->
-      <div class="nav flex-column nav-pills bg-light" style="width: 200px; height: 100vh;">
-        
+      <div
+        class="nav flex-column nav-pills bg-light"
+        style="width: 200px; height: 100vh"
+      >
         <!--CALENDER LINK-->
-        <a class="nav-link" 
-           :class="{ active: activeTab === 'calendar' }" 
-           href="#" 
-           @click.prevent="setActiveTab('calendar')">Calender</a>
+        <a
+          class="nav-link"
+          :class="{ active: activeTab === 'calendar' }"
+          href="#"
+          @click.prevent="setActiveTab('calendar')"
+          >Calender</a
+        >
         <!--ATTENDENCE LINK-->
-        <a class="nav-link" 
-           :class="{ active: activeTab === 'attendence' }" 
-           href="#" 
-           @click.prevent="setActiveTab('attendence')">Attendance</a>
+        <a
+          class="nav-link"
+          :class="{ active: activeTab === 'attendence' }"
+          href="#"
+          @click.prevent="setActiveTab('attendence')"
+          >Attendance</a
+        >
         <!-- REQUEST LEAVE LINK-->
-        <a class="nav-link" 
-           :class="{ active: activeTab === 'leaveRequests' }" 
-           href="#" 
-           @click.prevent="setActiveTab('leaveRequests')">Leave requests</a>
+        <a
+          class="nav-link"
+          :class="{ active: activeTab === 'leaveRequests' }"
+          href="#"
+          @click.prevent="setActiveTab('leaveRequests')"
+          >Leave requests</a
+        >
         <!--HISTORY LINK-->
-        <a class="nav-link" 
-           :class="{ active: activeTab === 'history' }" 
-           href="#" 
-           @click.prevent="setActiveTab('history')">History</a>       
+        <a
+          class="nav-link"
+          :class="{ active: activeTab === 'history' }"
+          href="#"
+          @click.prevent="setActiveTab('history')"
+          >History</a
+        >
       </div>
 
       <!-- Main content -->
@@ -35,19 +49,19 @@
 
         <!-- Conditional Rendering Based on Active Tab -->
         <div v-if="activeTab === 'calendar'">
-          <CalenderComp :employees="employeeAttendenceAndLeave"/>
+          <CalenderComp :employees="chupapi" />
         </div>
         <div v-if="activeTab === 'attendence'">
-          <AttendenceOfEmployees :employees="employeeAttendenceAndLeave"/>
+          <AttendenceOfEmployees :employees="chupapi" />
           <!-- content for leave requests here -->
         </div>
         <div v-if="activeTab === 'leaveRequests'">
-          <LeaveRequestComp :employees="employeeAttendenceAndLeave"/>
+          <LeaveRequestComp :employees="chupapi" />
           <!-- content for attendence here -->
         </div>
         <div v-if="activeTab === 'history'">
           <!-- <h2>History Content</h2> ADDED CONTENT HERE-->
-          <HistoryLeaveReqComp :employees="employeeAttendenceAndLeave"/>
+          <HistoryLeaveReqComp :employees="chupapi" />
           <!-- content for history here -->
         </div>
       </div>
@@ -56,38 +70,217 @@
 </template>
 
 <script>
-import AttendenceOfEmployees from '@/components/attendenceOfEmployees.vue';
-import CalenderComp from '@/components/CalenderComp.vue';
-import HistoryLeaveReqComp from '@/components/historyLeaveReqComp.vue';
-import LeaveRequestComp from '@/components/leaveRequestComp.vue';
+import AttendenceOfEmployees from "@/components/attendenceOfEmployees.vue";
+import CalenderComp from "@/components/CalenderComp.vue";
+import HistoryLeaveReqComp from "@/components/historyLeaveReqComp.vue";
+import LeaveRequestComp from "@/components/leaveRequestComp.vue";
 
 export default {
   components: {
-    CalenderComp, HistoryLeaveReqComp, LeaveRequestComp, AttendenceOfEmployees
+    CalenderComp,
+    HistoryLeaveReqComp,
+    LeaveRequestComp,
+    AttendenceOfEmployees,
   },
   data() {
     return {
-      activeTab: 'calendar', // Default active tab is Calendar
-      employeeAttendenceAndLeave : []
+      activeTab: "calendar", // Default active tab is Calendar
+      // employeeAttendenceAndLeave: [],
+      // attendanceAndLeave: [],
+      chupapi:[]
     };
   },
   methods: {
-    setActiveTab(tabName) {  // Sets the active tab based on clicked link
-      this.activeTab = tabName; 
+    setActiveTab(tabName) {
+      // Sets the active tab based on clicked link
+      this.activeTab = tabName;
     },
-    cloneData(){
-      this.employeeAttendenceAndLeave = this.getEmployeeAttendenceAndLeave
-    }
-  }, 
-  computed:{
-    getEmployeeAttendenceAndLeave(){
-      return this.$store.state.attendanceAndLeave
-    }
+
+    // transformData(rawData) {
+    //   // Group data by employee_id
+    //   const groupedData = rawData.reduce((acc, record) => {
+    //     const employeeId = record.employee_id;
+
+    //     // Initialize the employee object if it doesn't exist
+    //     if (!acc[employeeId]) {
+    //       acc[employeeId] = {
+    //         employeeId: employeeId,
+    //         name: record.employee_name,
+    //         attendance: [],
+    //         leaveRequests: [],
+    //       };
+    //     }
+
+    //     // Add attendance record if it exists
+    //     if (record.attendance_date && record.attendance_status) {
+    //       acc[employeeId].attendance.push({
+    //         date: record.attendance_date.split("T")[0], // Extract date part only
+    //         status: record.attendance_status,
+    //       });
+    //     }
+
+    //     // Add leave request record if it exists
+    //     if (record.leave_date && record.leave_reason && record.leave_status) {
+    //       acc[employeeId].leaveRequests.push({
+    //         date: record.leave_date.split("T")[0], // Extract date part only
+    //         reason: record.leave_reason,
+    //         status: record.leave_status,
+    //       });
+    //     }
+
+    //     return acc;
+    //   }, {});
+
+    //   // Convert the grouped data into an array
+    //   this.attendanceAndLeave = Object.values(groupedData);
+    // },
   },
-  mounted(){
-    this.cloneData()
+
+  computed: {
+    // getEmployeeAttendenceAndLeave(){
+    //   return this.$store.state.attendanceAndLeave
+    // }
+    rawDataAtt() {
+      return this.$store.state.attendanceRecordObj;
+    },
+    rawDataLeaveReq() {
+      return this.$store.state.LeaveReqnHistoryObj;
+    },
+
+    // convertedData() {
+    //   return this.rawData;
+    // },
+    // cloneData() {
+    //   this.employeeAttendenceAndLeave = this.attendanceAndLeave;
+    // },
+  },
+  async mounted() {
+    // this.cloneData()
+    // this.transformData(this.rawData)
+    //     {
+    //     "employee_name": "Sibongile Nkosi",
+    //     "employee_id": 1,
+    //     "attendance_date": "2024-11-24T22:00:00.000Z",
+    //     "attendance_status": "Present",
+    //     "leave_date": "2024-11-21T22:00:00.000Z",
+    //     "leave_reason": "Sick Leave",
+    //     "leave_status": "Approved"
+    // }
+
+    // ATTEMPT 2
+    // await this.$store.dispatch("getAttendanceRecord");
+    // console.log(this.chupapi,
+    //   this.convertedData.map((employee) => {
+    //     return {
+    //       employeeId: employee.employee_id,
+    //       name: employee.employee_name,
+    //       attendance: [
+    //         {
+    //           date: employee.attendance_date?.split("T")[0],
+    //           status: employee.attendance_status,
+    //         },
+    //       ],
+    //       leaveRequests: [
+    //         {
+    //           date: employee.leave_date,
+    //           reason: employee.leave_reason,
+    //           status: employee.attendance_status
+    //         },
+    //       ],
+    //     };
+    //   }).forEach(e => {
+    //     for(let x of [e]){
+    //       console.log(x);
+    //       let bool = this.chupapi.findIndex(e => e.employee_id === x.employee_id)
+    //       if(bool == -1){
+    //         this.chupapi.push(x)
+    //       } else{
+    //         this.chupapi[bool].attendance.push(x.attendance[0])
+    //         this.chupapi[bool].leaveRequests.push(x.leaveRequests[0])
+    //       }
+    //     }
+        
+    //   })
+    // );
+
+
+    await this.$store.dispatch("getAttendanceRecord");
+await this.$store.dispatch("getLeaveReqnHistory");
+
+console.log("Raw Attendance Data:", this.rawDataAtt);  
+console.log("Raw Leave Data:", this.rawDataLeaveReq);
+
+const attendanceData = this.rawDataAtt || [];  
+const leaveData = this.rawDataLeaveReq || [];
+
+let groupedEmployees = {};
+
+// Process attendance records
+attendanceData.forEach(record => {
+  console.log("Processing Attendance Record:", record); // Debug log
+  const { employeeId, name, date, status } = record;
+
+  if (!employeeId) {
+    console.warn("Missing employeeId in attendance record:", record);
+    return; // Skip records with no ID
   }
+
+  if (!groupedEmployees[employeeId]) {
+    groupedEmployees[employeeId] = {
+      employeeId: employeeId,
+      name: name || "Unknown",
+      attendance: [],
+      leaveRequests: [],
+    };
+  }
+
+  let formattedDate = date?.split("T")[0] || "";
+  if (formattedDate) {
+    groupedEmployees[employeeId].attendance.push({
+      date: formattedDate,
+      status: status || "Unknown",
+    });
+  }
+});
+
+// Process leave requests
+leaveData.forEach(request => {
+  console.log("Processing Leave Request:", request); // Debug log
+  const { employeeId, name, date, reason, status } = request;
+
+  if (!employeeId) {
+    console.warn("Missing employeeId in leave request:", request);
+    return; // Skip records with no ID
+  }
+
+  if (!groupedEmployees[employeeId]) {
+    groupedEmployees[employeeId] = {
+      employeeId: employeeId,
+      name: name || "Unknown",
+      attendance: [],
+      leaveRequests: [],
+    };
+  }
+
+  let formattedLeaveDate = date?.split("T")[0] || "";
+  if (formattedLeaveDate) {
+    groupedEmployees[employeeId].leaveRequests.push({
+      date: formattedLeaveDate,
+      reason: reason || "No Reason",
+      status: status || "Pending",
+    });
+  }
+});
+
+// Convert object to array
+this.chupapi = Object.values(groupedEmployees);
+console.log("Final Processed Data:", this.chupapi);
 }
+
+
+
+  
+};  
 </script>
 
 <style scoped>
@@ -137,7 +330,7 @@ export default {
 /* Main Content Container */
 .container {
   width: 70rem;
-  margin-left: 10px; 
+  margin-left: 10px;
   padding: 20px;
   background-color: #fff;
   border-radius: 8px;
@@ -151,7 +344,6 @@ export default {
 br {
   margin-bottom: 20px;
 }
-
 
 /* Laptop (1024px) */
 @media (max-width: 1024px) {

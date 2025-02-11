@@ -1,6 +1,7 @@
 <template>
   <div class="about">
-    <h2  style="font-family: 'Roboto', sans-serif;">Payroll</h2>
+    <h2  style="font-family: 'Roboto', sans-serif;">Payroll
+    </h2>
     
     <!-- Search Bar -->
     <input type="text" v-model="searchQuery" class="form-control mb-4" placeholder="Search by Name or Department..." />
@@ -9,14 +10,17 @@
       <div class="row justify-content-center">
 
         <!-- Loop through filtered employee array -->
-        <div v-for="(employee, index) in filteredEmployeeData" class="col-lg-4 mb-3" :key="index">
+        <div v-for="(employee) in filteredEmployeeData" class="col-lg-4 mb-3">
+          <!-- {{employee}} -->
           <div class="card"> <!--'instance' created -->
             <div class="card-body">
               <h5 class="card-title">{{ employee.name }} - {{ employee.department }}</h5>
               <p>Hours Worked: {{ employee.hoursWorked }}</p>
               <p>Leave Deductions: {{ employee.leaveDeductions }}</p>
 
-              <view-payslips-comp :employee="employee" :modal-id="'modal-' + index"/>
+              <!-- <view-payslips-comp :employee="employee" :modal-id="'modal-' + employee.employeeId"/> -->
+              <view-payslips-comp :employee="employee || {}" :modal-id="'modal-' + (employee?.employeeId || 0)"/>
+
             </div>
           </div>
         </div>
@@ -40,21 +44,18 @@ import ViewPayslipsComp from '@/components/viewPayslipsComp.vue';
 export default {
   data() {
     return {
-      fullEmployeePayrollData: [],
-      employeeInfo: [],
-      searchQuery: '', // Binding the search query thing here
-      progress:0,
+      fullEmployeePayrollData: [], // Full payroll data with employee names
+      searchQuery: '', // For search filtering
+      progress: 0,
     };
   },
+
   computed: {
-    employeePayrollData() {
-      return this.$store.state.payrollData; // Payroll data (no name of employee)
+    payrollData() {
+      return this.$store.state.payrollObj;
     },
-    getEmployeeInfoForNameOnly() {
-      return this.$store.state.employeeInformation; // Employee data for extracting names
-    },
+
     filteredEmployeeData() {
-      // This will filter the data based on the search query
       return this.fullEmployeePayrollData.filter(employee => {
         const query = this.searchQuery.toLowerCase();
         return (
@@ -64,46 +65,53 @@ export default {
       });
     }
   },
+
   methods: {
-    addNameToEmployeeData() {
-      this.fullEmployeePayrollData = [...this.employeePayrollData]; // Clone payroll data
-      this.employeeInfo = this.getEmployeeInfoForNameOnly; // Employee info
-
-      // Merge name into payroll data
-      this.fullEmployeePayrollData.forEach(employeePayroll => {
-        const matchingEmployeeInfo = this.employeeInfo.find(
-          employeeInfo => employeeInfo.employeeId === employeePayroll.employeeId
-        );
-
-        if (matchingEmployeeInfo) {
-          employeePayroll.name = matchingEmployeeInfo.name;
-          employeePayroll.department = matchingEmployeeInfo.department;
-          employeePayroll.position = matchingEmployeeInfo.position;
-        }
-      });
-    },
     sendPaySlips() {
-      this.startLoading()
+      this.startLoading();
     },
+
     startLoading() {
-  let interval = setInterval(() => {
-    if (this.progress < 100) {
-      this.progress += 25; // increment by 25%
-    } else {
-      clearInterval(interval); // stop interval when 100% is reached
-      alert('All payslips sent to employees');
-    }
-  }, 1000); // Update progress every second (1s)
+      let interval = setInterval(() => {
+        if (this.progress < 100) {
+          this.progress += 25; // Increment by 25%
+        } else {
+          clearInterval(interval); // Stop interval when 100% is reached
+          alert('All payslips sent to employees');
+        }
+      }, 1000);
+    },
+
+    updatePayrollData() {
+  if (Array.isArray(this.payrollData) && this.payrollData.length > 0) {
+    this.fullEmployeePayrollData = [...this.payrollData];
+  } else {
+    this.fullEmployeePayrollData = [];
+  }
 }
   },
-  components: {
-    ViewPayslipsComp
+
+  watch: {
+    payrollData: {
+      handler() {
+        this.updatePayrollData();
+      },
+      immediate: true, // Runs when component is first mounted
+      deep: true, // Watches for deep changes
+    },
   },
-  mounted() {
-    this.addNameToEmployeeData();
+
+  components: {
+    ViewPayslipsComp,
+  },
+
+  async mounted() {
+    await this.$store.dispatch("getPayroll");
+    console.log("Payroll Data after fetch:", this.payrollData);
   }
 };
 </script>
+
 
 <style scoped>
 .about {

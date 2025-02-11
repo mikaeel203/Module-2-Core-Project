@@ -30,9 +30,9 @@ export default createStore({
             ],
             "leaveRequests": [
                 {
-                    "date": "2024-11-22",
-                    "reason": "Sick Leave",
-                    "status": "Approved"
+                        "date": "2024-11-22",
+                        "reason": "Sick Leave",
+                        "status": "Approved"
                 },
                 {
                     "date": "2024-12-01",
