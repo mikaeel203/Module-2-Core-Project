@@ -159,3 +159,8 @@ INSERT INTO Payroll (employee_id, hours_worked, leave_deductions, final_salary) 
 (8, 160, 0, 56000),
 (9, 155, 5, 61500),
 (10, 162, 4, 57750);
+
+CREATE TABLE users (
+    username VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL
+);
