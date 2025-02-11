@@ -13,13 +13,13 @@ app.use(express.json());
 
 // Import routes (Move these above usage)
 import employeeRoutes from "./routes/EmployeeRouter.js";
-// import payrollRoutes from "./routes/PayrollRouter.js";
+import payrollRoutes from "./routes/PayrollRouter.js";
 import attendanceRoutes from "./routes/AttendanceRouter.js";
 import leaveRequestsRoutes from "./routes/leaveRequestsRouter.js";
 
 // Routes
 app.use("/employees", employeeRoutes);
-// app.use("/payroll", payrollRoutes);
+app.use("/payroll", payrollRoutes);
 app.use("/attendance", attendanceRoutes);
 app.use("/leaveRequests", leaveRequestsRoutes);
 
@@ -91,4 +91,4 @@ app.get('/protected', authMiddleware, (req, res) => {
 
 // Start server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`http://localhost:${PORT}`));
+app.listen(PORT, () => console.log('http://localhost:', PORT));

@@ -502,14 +502,45 @@ export default createStore({
         "leaveDeductions": 4,
         "finalSalary": 57750
     }
-]
+], 
+    attendanceRecordObj : null,
+    LeaveReqnHistoryObj :null,
+    payrollObj :null,
 
   },
   getters: {
   },
   mutations: {
+    setAttendanceRecord(state, payload){
+        state.attendanceRecordObj = payload
+    },
+    setLeaveReqnHistory(state, payload){
+        state.LeaveReqnHistoryObj = payload
+    }, 
+    setPayroll (state, payload){
+        state.payrollObj = payload
+    }
   },
   actions: {
+    //FOR THE ATTENDANCE RECORD
+    async getAttendanceRecord({commit}, payload){
+        let {attendanceRecord} = await (await fetch ("http://localhost:3000/attendance/record")).json()
+        commit('setAttendanceRecord', attendanceRecord)
+    },
+    //FOR THE LEAVE REQ AND HISTORY
+    async getLeaveReqnHistory({commit}, payload){
+        let {leaveRequests} = await (await fetch ("http://localhost:3000/attendance/leaveRequests_history")).json()
+        commit('setLeaveReqnHistory', leaveRequests)
+    },
+    //FOR THE PAYROLL
+    async getPayroll({commit}, payload){
+        let {payroll} = await (await fetch ("http://localhost:3000/payroll")).json()
+        commit('setPayroll', payroll)
+    }
+    
+
+
+
   },
   modules: {
   }
