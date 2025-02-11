@@ -3,9 +3,14 @@
     <!-- Add Employee Button -->
     <button class="add-btn" @click="openAddModal">Add Employee</button>
 
+    <!-- Edit button -->
+     <edit-modal :employees="employees"/>
+
     <!-- Employee Cards -->
     <div v-for="employee in $store.state.employees" :key="employee.employee_id" class="employee-card">
-      <button class="edit-btn" @click="editEmployee(employee)">Edit</button>
+      <!-- <button class="edit-btn" @click="editEmployee(employee)">Edit</button> -->
+           <!-- Edit button -->
+     <edit-modal/>
       <button class="remove-btn" @click="deleteEmployee(employee.employee_id)">Remove</button>
 
       <h5 class="employee-name">{{ employee.name }}</h5>
@@ -50,7 +55,7 @@
     </div>
 
     <!-- Edit Employee Modal -->
-    <div v-if="isEditing" class="modal-overlay" @click="closeModal">
+    <!-- <div v-if="isEditing" class="modal-overlay" @click="closeModal">
       <div class="modal-content" @click.stop>
         <h3>Edit Employee Information</h3>
 
@@ -74,37 +79,8 @@
       </div>
     </div>
 
-    <!-- Edit Employee Modal -->
-<div v-if="isEditing" class="modal-overlay" @click="closeModal">
-  <div class="modal-content" @click.stop>
-    <h3>Edit Employee Information</h3>
-    <label for="editName">Name:</label>
-    <input v-model="editableEmployee.name" id="editName" />
-    
-    <label for="editId">Employee ID:</label>
-    <input v-model="editableEmployee.employee_id" id="editId" />
-
-    <label for="editPosition">Position:</label>
-    <input v-model="editableEmployee.position_name" id="editPosition" />
-
-    <label for="editDepartment">Department:</label>
-    <input v-model="editableEmployee.department_name" id="editDepartment" />
-
-    <label for="editSalary">Salary:</label>
-    <input v-model="editableEmployee.salary" id="editSalary" />
-
-    <label for="editHistory">History:</label>
-    <input v-model="editableEmployee.employment_history" id="editHistory" />
-
-    <label for="editContact">Contact:</label>
-    <input v-model="editableEmployee.email" id="editContact" />
-
-    <button @click="saveChanges">Save Changes</button>
-    <button @click="closeModal">Cancel</button>
-  </div>
-</div>
-<!-- Review Modal -->
-<div v-if="isReviewing" class="modal-overlay" @click="closeModal">
+    <!-- Review Modal -->
+    <div v-if="isReviewing" class="modal-overlay" @click="closeModal">
       <div class="modal-content" @click.stop>
         <h3>Review Employee</h3>
         <p><strong>Name:</strong> {{ selectedEmployee.name }}</p>
@@ -118,6 +94,7 @@
 </template>
 
 <script>
+import editModal from '@/components/editModal.vue'
 export default {
   data() {
     return {
@@ -139,6 +116,9 @@ export default {
       selectedEmployee: {},
       reviewText: "",
     };
+  },
+  components:{
+    editModal
   },
   methods: {
     openAddModal() {
