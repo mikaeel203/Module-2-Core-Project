@@ -531,7 +531,10 @@ export default createStore({
     },
     addEmployee(state, employee){
       state.employees.push(employee)
-    }
+    },
+    setLeaveSummary(state, payload) {
+        state.leaveSummary = payload;
+      }
   },
   actions: {
     async getData({ commit }) {
@@ -568,14 +571,14 @@ export default createStore({
         }
       },
 
-    // async getData({ commit }) {
-    //   let { employees } = await (await fetch('http://localhost:3000/employees')).json();
-    //   commit('setEmployees', employees);
-    // },
-    // async deleteEmployee({ commit }, employee_id) {
-    //   await fetch(`http://localhost:3000/employees/${employee_id}`, { method: 'DELETE' });
-    //   location.reload();
-    // },
+    async getData({ commit }) {
+      let { employees } = await (await fetch('http://localhost:3000/employees')).json();
+      commit('setEmployees', employees);
+    },
+    async deleteEmployee({ commit }, employee_id) {
+      await fetch(`http://localhost:3000/employees/${employee_id}`, { method: 'DELETE' });
+      location.reload();
+    },
     async getLeaveSummary({ commit }) {
         try {
           const response = await fetch('http://localhost:5000/api/home/leave-summary');
@@ -588,7 +591,7 @@ export default createStore({
           console.error('Error fetching leave summary:', error);
         }
       },
-    async patchEmployee({commit}, employees){
+      async patchEmployee({commit}, employees){
         // console.log(employees);
         await fetch('http://localhost:3000/employees/'+employees.employee_id, {
             method: 'PATCH',
