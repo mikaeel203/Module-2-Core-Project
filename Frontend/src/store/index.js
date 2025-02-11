@@ -511,6 +511,7 @@ export default createStore({
 
   },
   getters: {
+    leaveSummary:(state) => state.leaveSummary,
   },
   mutations: {
     setEmployees(state, payload) {
@@ -567,14 +568,17 @@ export default createStore({
       }
     },
     async getLeaveSummary({ commit }) {
-      try {
-        let response = await fetch('http://localhost:3000/home/leave-summary');
-        let leaveSummary = await response.json();
-        commit('setLeaveSummary', leaveSummary);
-      } catch (error) {
-        console.error("Failed to fetch leave summary data.", error);
-      }
-    },
+        try {
+          const response = await fetch('http://localhost:5000/api/home/leave-summary');
+          if (!response.ok) {
+            throw new Error('Failed to fetch leave summary');
+          }
+          const data = await response.json();
+          commit('setLeaveSummary', data);
+        } catch (error) {
+          console.error('Error fetching leave summary:', error);
+        }
+      },
     async patchEmployee({commit}, employees){
         // console.log(employees);
         await fetch('http://localhost:3000/employees/'+employees.employee_id, {
