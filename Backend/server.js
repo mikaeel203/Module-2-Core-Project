@@ -86,7 +86,7 @@ app.post('/login', async (req, res) => {
         }
 
         // Query database for user
-        const [rows] = await pool.execute('SELECT id, username, password FROM users WHERE username = ?', [username]);
+        const [rows] = await pool.execute('SELECT username, password FROM users WHERE username = ?', [username]);
 
         if (rows.length === 0) {
             return res.status(400).json({ message: "Invalid username or password" });

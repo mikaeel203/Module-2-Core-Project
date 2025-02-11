@@ -9,6 +9,7 @@
       <p class="slogan">"Innovating the future of business"</p>
     </div>
 
+    <!-- Divider -->
     <div class="divider"></div>
 
     <!-- Right Section -->
@@ -70,14 +71,14 @@ export default {
       } finally {
         this.loading = false;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style scoped> 
 .login-container {
-  position: fixed;
+  position: fixed; /* Full viewport coverage */
   top: 0;
   left: 0;
   width: 100%;
@@ -85,19 +86,19 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(to right, #f7f8fa, #e6eaf0);
-  z-index: 9999;
+  background: linear-gradient(to right, #f7f8fa, #e6eaf0); /* Subtle gradient */
+  z-index: 9999; /* Ensures the login page is above other content */
   font-family: 'Arial', sans-serif;
 }
 
 .left-section,
 .right-section {
-  flex: 1;
+  flex: 1; /* Each side takes half of the width */
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  text-align: center;
+  text-align: center; /* Center text alignment */
   padding: 20px;
 }
 
@@ -122,7 +123,7 @@ h1 {
 .divider {
   width: 2px;
   background: #ddd;
-  height: 100%;
+  height: 100%; /* Extend vertically to center with content */
   align-self: stretch;
 }
 
@@ -133,7 +134,7 @@ h1 {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   max-width: 400px;
   margin-right: 180px;
-  margin-left: 180px;
+  margin-left: 180px
 }
 
 h2 {
@@ -144,7 +145,8 @@ h2 {
 
 form div {
   margin-bottom: 15px;
-  width: 100%;
+  width: 100%; /* Ensure form inputs take full width */
+
 }
 
 label {
@@ -209,4 +211,6 @@ button:hover {
 .forgot-password a:hover {
   text-decoration: underline;
 }
+
+
 </style>

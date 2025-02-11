@@ -76,8 +76,8 @@
 
         <button @click="saveChanges()">Save Changes</button>
         <button @click="closeModal">Cancel</button>
-      </div>
-    </div>
+      </div> -->
+    <!-- </div> -->
 
     <!-- Review Modal -->
     <div v-if="isReviewing" class="modal-overlay" @click="closeModal">
@@ -166,35 +166,9 @@ export default {
       this.isEditing = false;
       this.isReviewing = false;
     },
-    // Delete Employee
-    deleteEmployee(employee_id) {
-      this.$store.dispatch("deleteEmployee", employee_id);
-    },
-    // Add new employee
-    postEmployee(employee) {
-      this.$store.dispatch("postEmployee", this.employees);
-    },
-
-    // Update employee's information
-    async saveChanges() {
-      let updatedData = {
-        name: this.employee.name,
-        department_id: this.employee.department_id,
-        department_name: this.employee.department_name,
-        position_id: this.employee.position_id,
-        position_name: this.employee.position_name,
-        email: this.employee.email,
-      };
-
-      await this.$store.dispatch("updateEmployee", {
-        employee_id: this.employee.employee_id,
-        updatedData,
-      });
-    },
   },
   mounted() {
     this.$store.dispatch("getData");
-    this.cloneData();
   },
 };
 </script>

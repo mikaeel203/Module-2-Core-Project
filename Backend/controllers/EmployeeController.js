@@ -37,19 +37,19 @@ const deleteEmployeeCon = async (req, res) => {
     }
 };
 
-// const updateEmployeeCon = async (req, res) => {
-//     try {
-//         let { name, department_id, department_name, position_id, position_name, email } = req.body;
-//         console.log(req.body);
+const updateEmployeeCon = async (req, res) => {
+    try {
+        let { name, department_id, department_name, position_id, position_name, email } = req.body;
+        console.log(req.body);
 
-//         // Call the updated function from the model
-//         const updatedEmployee = await updateEmployee(req.params.employee_id, name, department_id, position_id, department_name, position_name, email);
+        // Call the updated function from the model
+        const updatedEmployee = await updateEmployee(req.params.employee_id, name, department_id, position_id, department_name, position_name, email);
 
-//         res.json({ message: 'Employee updated successfully', employee: updatedEmployee });
-//     } catch (error) {
-//         console.error('Error updating employee:', error);
-//         res.status(500).json({ error: 'Internal Server Error' });
-//     }
-// };
+        res.json({ message: 'Employee updated successfully', employee: updatedEmployee });
+    } catch (error) {
+        console.error('Error updating employee:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
 
 export { getEmployeesCon, addNewEmployeeCon, deleteEmployeeCon, updateEmployeeCon };
