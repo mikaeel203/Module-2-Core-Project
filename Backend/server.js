@@ -2,10 +2,10 @@
 import cors from 'cors';
 import express from 'express';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+// import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { pool } from './config/db.js'; 
-import authMiddleware from './middleware/authMiddleware.js';
+// import authMiddleware from './middleware/authMiddleware.js';
 
 // Load environment variables
 dotenv.config();
@@ -14,14 +14,14 @@ dotenv.config();
 const app = express();  
 
 // Session middleware
-app.use(
-    session({
-        secret: 'your_secret_key', // Change this to a strong, random string
-        resave: false,
-        saveUninitialized: true,
-        cookie: { secure: false, httpOnly: true, sameSite: 'strict' } // secure: true for HTTPS
-    })
-);
+// app.use(
+//     session({
+//         secret: 'your_secret_key', // Change this to a strong, random string
+//         resave: false,
+//         saveUninitialized: true,
+//         cookie: { secure: false, httpOnly: true, sameSite: 'strict' } // secure: true for HTTPS
+//     })
+// );
 
 // CORS middleware
 app.use(cors({
@@ -86,7 +86,7 @@ app.post('/login', async (req, res) => {
         }
 
         // Query database for user
-        const [rows] = await pool.execute('SELECT id, username, password FROM users WHERE username = ?', [username]);
+        const [rows] = await pool.execute('SELECT username, password FROM users WHERE username = ?', [username]);
 
         if (rows.length === 0) {
             return res.status(400).json({ message: "Invalid username or password" });
@@ -137,4 +137,4 @@ app.get('/protected', (req, res) => {
 
 // Start server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log('http://localhost:', PORT));
+app.listen(PORT, () => console.log('http://localhost:3000'));
