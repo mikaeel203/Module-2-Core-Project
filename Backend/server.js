@@ -2,9 +2,10 @@
 import cors from 'cors';
 import express from 'express';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import session from 'express-session';
-import { pool } from './config/db.js';
+import { pool } from './config/db.js'; 
+import authMiddleware from './middleware/authMiddleware.js';
 
 // Load environment variables
 dotenv.config();
@@ -38,11 +39,13 @@ import payrollRoutes from "./routes/PayrollRouter.js";
 import attendanceRoutes from "./routes/AttendanceRouter.js";
 import leaveRequestsRoutes from "./routes/leaveRequestsRouter.js";
 
+
 // Routes
 app.use("/employees", employeeRoutes);
 app.use("/payroll", payrollRoutes);
 app.use("/attendance", attendanceRoutes);
 app.use("/leaveRequests", leaveRequestsRoutes);
+
 
 // Register Route
 app.post('/register', async (req, res) => {
@@ -83,7 +86,7 @@ app.post('/login', async (req, res) => {
         }
 
         // Query database for user
-        const [rows] = await pool.execute('SELECT * FROM users WHERE username = ?', [username]);
+        const [rows] = await pool.execute('SELECT id, username, password FROM users WHERE username = ?', [username]);
 
         if (rows.length === 0) {
             return res.status(400).json({ message: "Invalid username or password" });
@@ -98,10 +101,15 @@ app.post('/login', async (req, res) => {
             return res.status(400).json({ message: "Invalid username or password" });
         }
 
+        // Ensure JWT_SECRET is loaded
+        if (!process.env.JWT_SECRET) {
+            return res.status(500).json({ message: "Server error: Missing JWT_SECRET" });
+        }
+
         // Store user info in session
         req.session.user = { id: user.id, username: user.username };
 
-        return res.status(200).json({ message: "Login successful", user: req.session.user });
+        return res.status(200).json({ message: "Login successful", token, user: { id: user.id, username: user.username } });
     } catch (err) {
         console.error("Login error:", err);
         res.status(500).json({ message: "Internal server error" });

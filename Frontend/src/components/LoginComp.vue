@@ -1,5 +1,6 @@
 <template>
   <div class="login-container">
+    <!-- Left Section -->
     <div class="left-section">
       <div class="logo">
         <img src="../assets/modernTech Logo.jpg" alt="Company Logo" />
@@ -10,6 +11,7 @@
 
     <div class="divider"></div>
 
+    <!-- Right Section -->
     <div class="right-section">
       <h2>Login</h2>
       <form @submit.prevent="login">
@@ -51,39 +53,18 @@ export default {
       this.errorMessage = "";
 
       try {
-        console.log("Login function triggered");
+        const response = await axios.post("http://localhost:3000/login", {
+          username: this.username,
+          password: this.password,
+        });
 
-        const response = await axios.post(
-          "http://localhost:3000/login",
-          {
-            username: this.username.trim(),
-            password: this.password
-          },
-          {
-            headers: { "Content-Type": "application/json" },
-            withCredentials: true
-          }
-        );
+        // Save token to localStorage
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("user", JSON.stringify(response.data.user));
 
-        console.log("Response:", response.data);
-
-        if (response.data.user) {
-          localStorage.setItem("user", JSON.stringify(response.data.user));
-
-          console.log("Router instance:", this.$router);
-
-          // Use nextTick to ensure Vue updates before navigating
-          this.$nextTick(() => {
-  this.$router.replace("/home").catch((err) => {
-    console.error("Navigation Error:", err);
-  });
-});
-;
-        } else {
-          this.errorMessage = "Login failed. No user session received.";
-        }
+        // Redirect to home
+        this.$router.push("/home");
       } catch (error) {
-        console.error("Login error:", error);
         this.errorMessage =
           error.response?.data?.message || "Login failed. Please try again.";
       } finally {
@@ -94,7 +75,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped> 
 .login-container {
   position: fixed;
   top: 0;

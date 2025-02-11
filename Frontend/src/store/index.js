@@ -1,7 +1,12 @@
-import { createStore } from 'vuex'
+import { createStore } from 'vuex';
 
 export default createStore({
   state: {
+    employees: null,
+    attendanceAndLeave: null,
+    employeeInformation: null,
+    payrollData: null,
+    leaveSummary: null,
     attendanceAndLeave: [  //ATTENDENCE AND LEAVE
         {
             "employeeId": 1,
@@ -30,9 +35,9 @@ export default createStore({
             ],
             "leaveRequests": [
                 {
-                        "date": "2024-11-22",
-                        "reason": "Sick Leave",
-                        "status": "Approved"
+                    "date": "2024-11-22",
+                    "reason": "Sick Leave",
+                    "status": "Approved"
                 },
                 {
                     "date": "2024-12-01",
@@ -502,17 +507,17 @@ export default createStore({
         "leaveDeductions": 4,
         "finalSalary": 57750
     }
-], 
-    attendanceRecordObj : null,
-    LeaveReqnHistoryObj :null,
-    payrollObj :null,
+]
 
   },
   getters: {
   },
   mutations: {
-    setAttendanceRecord(state, payload){
-        state.attendanceRecordObj = payload
+    setEmployees(state, payload) {
+      state.employees = payload;
+    },
+    setAttendanceAndLeave(state, payload) {
+      state.attendanceAndLeave = payload;
     },
     setLeaveReqnHistory(state, payload){
         state.LeaveReqnHistoryObj = payload
@@ -528,6 +533,15 @@ export default createStore({
     }
   },
   actions: {
+    async getData({ commit }) {
+        try {
+          let response = await fetch('http://localhost:3000/employees');
+          let employees = await response.json();
+          commit('setEmployees', employees);
+        } catch (error) {
+          console.error("Failed to fetch employees. Please try again.", error);
+        }
+      },
     //FOR THE ATTENDANCE RECORD
     async getAttendanceRecord({commit}, payload){
         let {attendanceRecord} = await (await fetch ("http://localhost:3000/attendance/record")).json()
@@ -543,18 +557,33 @@ export default createStore({
         let {payroll} = await (await fetch ("http://localhost:3000/payroll")).json()
         commit('setPayroll', payroll)
     },
-    
+    async getEmployeeInformation({ commit }) {
+        try {
+          let response = await fetch('http://localhost:3000/employee-info');
+          let employeeInformation = await response.json();
+          commit('setEmployeeInformation', employeeInformation);
+        } catch (error) {
+          console.error("Failed to fetch employee information.", error);
+        }
+      },
 
-
-
-    async getData({ commit }) {
-      let { employees } = await (await fetch('http://localhost:3000/employees')).json();
-      commit('setEmployees', employees);
-    },
-    async deleteEmployee({ commit }, employee_id) {
-      await fetch(`http://localhost:3000/employees/${employee_id}`, { method: 'DELETE' });
-      location.reload();
-    },
+    // async getData({ commit }) {
+    //   let { employees } = await (await fetch('http://localhost:3000/employees')).json();
+    //   commit('setEmployees', employees);
+    // },
+    // async deleteEmployee({ commit }, employee_id) {
+    //   await fetch(`http://localhost:3000/employees/${employee_id}`, { method: 'DELETE' });
+    //   location.reload();
+    // },
+    async getLeaveSummary({ commit }) {
+        try {
+          let response = await fetch('http://localhost:3000/home/leave-summary');
+          let leaveSummary = await response.json();
+          commit('setLeaveSummary', leaveSummary);
+        } catch (error) {
+          console.error("Failed to fetch leave summary data.", error);
+        }
+      },
     // async postEmployee({ commit }, employee) {
     //   await fetch('http://localhost:3000/employees/', {
     //     method: 'POST',
