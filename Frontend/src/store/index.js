@@ -519,6 +519,12 @@ export default createStore({
     }, 
     setPayroll (state, payload){
         state.payrollObj = payload
+    },
+    setEmployees(state, payload) {
+      state.employees = payload;
+    },
+    addEmployee(state, employee){
+      state.employees.push(employee)
     }
   },
   actions: {
@@ -536,12 +542,74 @@ export default createStore({
     async getPayroll({commit}, payload){
         let {payroll} = await (await fetch ("http://localhost:3000/payroll")).json()
         commit('setPayroll', payroll)
-    }
+    },
     
 
 
 
+    async getData({ commit }) {
+      let { employees } = await (await fetch('http://localhost:3000/employees')).json();
+      commit('setEmployees', employees);
+    },
+    async deleteEmployee({ commit }, employee_id) {
+      await fetch(`http://localhost:3000/employees/${employee_id}`, { method: 'DELETE' });
+      location.reload();
+    },
+    // async postEmployee({ commit }, employee) {
+    //   await fetch('http://localhost:3000/employees/', {
+    //     method: 'POST',
+    //     headers: { "Content-Type": "application/json" },
+    //     body: JSON.stringify({
+    //       employee_id: employee.employee_id,
+    //       name: employee.name,
+    //       position_name: employee.position_name, // Backend will get position_id
+    //       department_name: employee.department_name, // Backend will get department_id
+    //       salary: employee.salary,
+    //       email: employee.email
+    //     })
+    //   });
+    //   location.reload();
+    // },    
+    async postEmployee({ commit }, employee) {
+      try {
+        const response = await fetch('http://localhost:3000/employees/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            employee_id: employee.employee_id,
+            name: employee.name,
+            position_id: employee.position_id, // Send the position ID, not position_name
+            department_id: employee.department_id, // Send the department ID, not department_name
+            salary: employee.salary,
+            email: employee.email,
+          }),
+        });
+    
+        if (!response.ok) {
+          throw new Error('Failed to add employee');
+        }
+    
+        const data = await response.json();
+        commit('addEmployee', data.employee); // Commit the new employee to the store
+      } catch (error) {
+        console.error('Error adding employee:', error);
+      }
+    },
+    async updateEmployee({ commit }, { employee_id, updatedData }) {
+      await fetch(`http://localhost:3000/employees/${employee_id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: updatedData.name,
+          department_id: updatedData.department_id,
+          department_name: updatedData.department_name,
+          position_id: updatedData.position_id,
+          position_name: updatedData.position_name,
+          email: updatedData.email
+        })
+      });
+      location.reload();
+    }
   },
-  modules: {
-  }
-})
+  modules: {}
+});

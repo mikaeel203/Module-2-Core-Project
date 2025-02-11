@@ -1,5 +1,6 @@
 <template>
   <div class="employee-dashboard">
+<!-- {{ this.$store.state.employees }} -->
     <!-- Search Bar -->
     <input 
       type="text" 
@@ -17,7 +18,7 @@
     </button>
 
     <!-- Employee Card -->
-    <div v-for="employee in filteredEmployees" :key="employee.employeeId" class="employee-card">
+    <div v-for="employee in $store.state.employees" :key="employee.employee_id" class="employee-card">
       <!-- Edit the emp button -->
       <button 
         class="edit-btn" 
@@ -29,19 +30,19 @@
       <!-- Remove button -->
       <button 
         class="remove-btn" 
-        @click="removeEmployee(employee.employeeId)"
+        @click="deleteEmployee(employee.employee_id)"
       >
         Remove
       </button>
 
       <!-- Employee info -->
       <h5 class="employee-name">{{ employee.name }}</h5>
-      <p class="employee-info">ID: {{ employee.employeeId }}</p>
-      <p class="employee-info">Position: {{ employee.position }}</p>
-      <p class="employee-info">Department: {{ employee.department }}</p>
+      <p class="employee-info">ID: {{ employee.employee_id }}</p>
+      <p class="employee-info">Position: {{ employee.position_name }}</p>
+      <p class="employee-info">Department: {{ employee.department_name }}</p>
       <p class="employee-info">Salary: R{{ employee.salary }}</p>
-      <p class="employee-info">History: {{ employee.employmentHistory }}</p>
-      <p class="employee-info">Contact: {{ employee.contact }}</p>
+      <p class="employee-info">History: {{ employee.employment_history }}</p>
+      <p class="employee-info">Contact: {{ employee.email }}</p>
 
       <!-- Review button -->
       <button 
@@ -57,30 +58,62 @@
       <div class="modal-content" @click.stop>
         <h3>Add New Employee</h3>
         <label for="addName">Name:</label>
-        <input v-model="newEmployee.name" id="addName" />
+        <input v-model="employees.name" id="addName" />
+
+        <label for="addId">Employee ID:</label>
+        <input v-model="employees.employee_id" id="addId" />
 
         <label for="addPosition">Position:</label>
-        <input v-model="newEmployee.position" id="addPosition" />
+        <input v-model="employees.position_name" id="addPosition" />
 
         <label for="addDepartment">Department:</label>
-        <input v-model="newEmployee.department" id="addDepartment" />
+        <input v-model="employees.department_name" id="addDepartment" />
 
         <label for="addSalary">Salary:</label>
-        <input v-model="newEmployee.salary" id="addSalary" />
+        <input v-model="employees.salary" id="addSalary" />
 
         <label for="addHistory">History:</label>
-        <input v-model="newEmployee.employmentHistory" id="addHistory" />
+        <input v-model="employees.employment_history" id="addHistory" />
 
         <label for="addContact">Contact:</label>
-        <input v-model="newEmployee.contact" id="addContact" />
+        <input v-model="employees.email" id="addContact" />
 
-        <button @click="addEmployee">Add Employee</button>
+        <button @click="postEmployee(employee)">Add Employee</button>
         <button @click="closeModal">Cancel</button>
       </div>
     </div>
 
-    <!-- Review Modal -->
-    <div v-if="isReviewing" class="modal-overlay" @click="closeModal">
+    <!-- Edit Employee Modal -->
+<div v-if="isEditing" class="modal-overlay" @click="closeModal">
+  <div class="modal-content" @click.stop>
+    <h3>Edit Employee Information</h3>
+    <label for="editName">Name:</label>
+    <input v-model="editableEmployee.name" id="editName" />
+    
+    <label for="editId">Employee ID:</label>
+    <input v-model="editableEmployee.employee_id" id="editId" />
+
+    <label for="editPosition">Position:</label>
+    <input v-model="editableEmployee.position_name" id="editPosition" />
+
+    <label for="editDepartment">Department:</label>
+    <input v-model="editableEmployee.department_name" id="editDepartment" />
+
+    <label for="editSalary">Salary:</label>
+    <input v-model="editableEmployee.salary" id="editSalary" />
+
+    <label for="editHistory">History:</label>
+    <input v-model="editableEmployee.employment_history" id="editHistory" />
+
+    <label for="editContact">Contact:</label>
+    <input v-model="editableEmployee.email" id="editContact" />
+
+    <button @click="saveChanges">Save Changes</button>
+    <button @click="closeModal">Cancel</button>
+  </div>
+</div>
+<!-- Review Modal -->
+<div v-if="isReviewing" class="modal-overlay" @click="closeModal">
       <div class="modal-content" @click.stop>
         <h3>Review Employee</h3>
         <p><strong>Name:</strong> {{ selectedEmployee.name }}</p>
@@ -102,6 +135,18 @@
 export default {
   data() {
     return {
+      employees: [
+        {
+          name: null,
+          employee_id: null,
+          position_name: null,
+          department_name: null,
+          salary: null,
+          employment_history: null,
+          email: null,
+        },
+      ],
+
       searchQuery: "",
       employeeDataRecieved: [],
       isAdding: false,
@@ -124,9 +169,10 @@ export default {
   computed: {
     filteredEmployees() {
       const query = this.searchQuery.toLowerCase();
-      return this.employeeDataRecieved.filter(employee =>
-        employee.name.toLowerCase().includes(query) ||
-        employee.department.toLowerCase().includes(query)
+      return this.employeeDataRecieved.filter(
+        (employee) =>
+          employee.name.toLowerCase().includes(query) ||
+          employee.department.toLowerCase().includes(query)
       );
     },
   },
@@ -137,19 +183,19 @@ export default {
     openAddModal() {
       this.isAdding = true;
     },
-    addEmployee() {
-      if (this.newEmployee.name && this.newEmployee.department) {
-        const newEmployee = {
-          ...this.newEmployee,
-          employeeId: Date.now(),
-        };
-        this.employeeDataRecieved.push(newEmployee);
-        this.closeModal();
-        this.resetNewEmployee();
-      } else {
-        alert("Please fill in all required fields.");
-      }
-    },
+    // addEmployee() {
+    //   if (this.newEmployee.name && this.newEmployee.department) {
+    //     const newEmployee = {
+    //       ...this.newEmployee,
+    //       employeeId: Date.now(),
+    //     };
+    //     this.employeeDataRecieved.push(newEmployee);
+    //     this.closeModal();
+    //     this.resetNewEmployee();
+    //   } else {
+    //     alert("Please fill in all required fields.");
+    //   }
+    // },
     resetNewEmployee() {
       this.newEmployee = {
         employeeId: null,
@@ -167,7 +213,7 @@ export default {
     },
     removeEmployee(employeeId) {
       this.employeeDataRecieved = this.employeeDataRecieved.filter(
-        employee => employee.employeeId !== employeeId
+        (employee) => employee.employeeId !== employeeId
       );
     },
     openReviewModal(employee) {
@@ -189,12 +235,39 @@ export default {
       this.isReviewing = false;
       this.resetNewEmployee();
     },
+    // Delete Employee
+    deleteEmployee(employee_id) {
+      this.$store.dispatch("deleteEmployee", employee_id);
+    },
+    // Add new employee
+    postEmployee(employee) {
+      this.$store.dispatch("postEmployee", employee);
+    },
+
+    // Update employee's information
+    async saveChanges() {
+      let updatedData = {
+        name: this.employee.name,
+        department_id: this.employee.department_id,
+        department_name: this.employee.department_name,
+        position_id: this.employee.position_id,
+        position_name: this.employee.position_name,
+        email: this.employee.email,
+      };
+
+      await this.$store.dispatch("updateEmployee", {
+        employee_id: this.employee.employee_id,
+        updatedData,
+      });
+    },
   },
   mounted() {
     this.cloneData();
+    this.$store.dispatch("getData");
   },
 };
 </script>
+
 
 <style scoped>
 .employee-dashboard {

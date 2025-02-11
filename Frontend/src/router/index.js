@@ -5,9 +5,13 @@ import EmployeeDataManagementView from '../views/EmployeeDataManagementView.vue'
 import AttTrackingView from '@/views/AttTrackingView.vue'
 import PayrollView from '@/views/PayrollView.vue'
 
-const isAuthenticated = () => {
-  return localStorage.getItem('isAuthenticated') === 'true'; // Check the stored value
-};
+// const isAuthenticated = () => {
+//   return localStorage.getItem('isAuthenticated') === 'true'; // Check the stored value
+// };
+function isAuthenticated() {
+  const user = localStorage.getItem("user");
+  return user !== null && user !== "undefined"; // Ensure it's not "undefined" as a string
+}
 
 const routes = [
   {//LOGIN PAGE MAY HAVE FORGOTTEN
@@ -26,10 +30,22 @@ const routes = [
     path: '/home',
     name: 'home',
     component: HomeView,
+    // beforeEnter: (to, from, next) => {
+    //   if (!isAuthenticated()) {
+    //     next('/'); // Redirect to login if not authenticated
+    //   } else {
+    //     next();
+    //   }
+    // }
     beforeEnter: (to, from, next) => {
+      console.log("Checking authentication...");
+      console.log("Stored user:", localStorage.getItem("user"));
+      
       if (!isAuthenticated()) {
-        next('/'); // Redirect to login if not authenticated
+        console.log("Not authenticated, redirecting to login...");
+        next('/');
       } else {
+        console.log("Authenticated, allowing navigation...");
         next();
       }
     }

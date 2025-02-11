@@ -1,6 +1,5 @@
 <template>
   <div class="login-container">
-    <!-- Left Side -->
     <div class="left-section">
       <div class="logo">
         <img src="../assets/modernTech Logo.jpg" alt="Company Logo" />
@@ -9,10 +8,8 @@
       <p class="slogan">"Innovating the future of business"</p>
     </div>
 
-    <!-- Divider -->
     <div class="divider"></div>
 
-    <!-- right -->
     <div class="right-section">
       <h2>Login</h2>
       <form @submit.prevent="login">
@@ -25,7 +22,9 @@
           <input type="password" v-model="password" id="password" required />
         </div>
         <p class="error-message" v-if="errorMessage">{{ errorMessage }}</p>
-        <button type="submit">Login</button>
+        <button type="submit" :disabled="loading">
+          {{ loading ? "Logging in..." : "Login" }}
+        </button>
         <div class="forgot-password">
           <a href="#">Forgot Password?</a>
         </div>
@@ -34,36 +33,70 @@
   </div>
 </template>
 
-
-
 <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
-      username: '',
-      password: '',
-      errorMessage: '', // Holds the error message for invalid credentials
+      username: "",
+      password: "",
+      errorMessage: "",
+      loading: false,
     };
   },
   methods: {
-    login() {
-      if (this.username === 'admin' && this.password === 'password321') {
-        localStorage.setItem('isAuthenticated', 'true'); // Save authentication state
-        this.$router.push('/home'); // Redirect to the protected route
-      } else {
-        this.errorMessage = 'Invalid credentials';
-        this.username = ''; // Clear input fields
-        this.password = '';
+    async login() {
+      this.loading = true;
+      this.errorMessage = "";
+
+      try {
+        console.log("Login function triggered");
+
+        const response = await axios.post(
+          "http://localhost:3000/login",
+          {
+            username: this.username.trim(),
+            password: this.password
+          },
+          {
+            headers: { "Content-Type": "application/json" },
+            withCredentials: true
+          }
+        );
+
+        console.log("Response:", response.data);
+
+        if (response.data.user) {
+          localStorage.setItem("user", JSON.stringify(response.data.user));
+
+          console.log("Router instance:", this.$router);
+
+          // Use nextTick to ensure Vue updates before navigating
+          this.$nextTick(() => {
+  this.$router.replace("/home").catch((err) => {
+    console.error("Navigation Error:", err);
+  });
+});
+;
+        } else {
+          this.errorMessage = "Login failed. No user session received.";
+        }
+      } catch (error) {
+        console.error("Login error:", error);
+        this.errorMessage =
+          error.response?.data?.message || "Login failed. Please try again.";
+      } finally {
+        this.loading = false;
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
-
-<style scoped> 
+<style scoped>
 .login-container {
-  position: fixed; /* Full viewport coverage */
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -71,19 +104,19 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(to right, #f7f8fa, #e6eaf0); /* Subtle gradient */
-  z-index: 9999; /* Ensures the login page is above other content */
+  background: linear-gradient(to right, #f7f8fa, #e6eaf0);
+  z-index: 9999;
   font-family: 'Arial', sans-serif;
 }
 
 .left-section,
 .right-section {
-  flex: 1; /* Each side takes half of the width */
+  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  text-align: center; /* Center text alignment */
+  text-align: center;
   padding: 20px;
 }
 
@@ -108,7 +141,7 @@ h1 {
 .divider {
   width: 2px;
   background: #ddd;
-  height: 100%; /* Extend vertically to center with content */
+  height: 100%;
   align-self: stretch;
 }
 
@@ -119,7 +152,7 @@ h1 {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   max-width: 400px;
   margin-right: 180px;
-  margin-left: 180px
+  margin-left: 180px;
 }
 
 h2 {
@@ -130,8 +163,7 @@ h2 {
 
 form div {
   margin-bottom: 15px;
-  width: 100%; /* Ensure form inputs take full width */
-
+  width: 100%;
 }
 
 label {
@@ -196,6 +228,4 @@ button:hover {
 .forgot-password a:hover {
   text-decoration: underline;
 }
-
-
 </style>
